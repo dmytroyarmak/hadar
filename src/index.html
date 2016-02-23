@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="app.css">
+    <title>Методи паралельних обчислень для розв’язання систем лінійних алгебраїчних рівнянь</title>
+</head>
+<body>
+    <div ng-app="hadar" ng-controller="HadarController as vm" ng-cloak>
+        <h1>Методи паралельних обчислень для розв’язання систем лінійних алгебраїчних рівнянь</h1>
+        <form name="vm.taskForm">
+            <fieldset>
+                <legend>Параметри задачі</legend>
+
+                <div>
+                    <label for="method">Метод розв'язання:</label>
+                    <select
+                        name="method"
+                        id="method"
+                        required
+                        ng-model="vm.method"
+                        ng-options="method.value as method.label for method in vm.availableMethods"
+                        class="ha-input"
+                    >
+                        <option value="" ng-if="!vm.method">Виберіть метод розв'язання</option>
+                    </select>
+                    <div
+                        ng-if="vm.taskForm.method.$dirty"
+                        ng-messages="vm.taskForm.method.$error"
+                    >
+                        <div ng-message="required">Ви не обрали метод розв'язання</div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="method">Тип матриці:</label>
+                    <select
+                        name="matrixType"
+                        id="matrixType"
+                        required
+                        ng-model="vm.matrixType"
+                        ng-options="matrixType.value as matrixType.label for matrixType in vm.availableMatrixTypes"
+                        class="ha-input"
+                    >
+                        <option value="" ng-if="!vm.matrixType">Виберіть тип матриці</option>
+                    </select>
+                    <div
+                        ng-if="vm.taskForm.matrixType.$dirty"
+                        ng-messages="vm.taskForm.matrixType.$error"
+                    >
+                        <div ng-message="required">Ви не обрали метод розв'язання</div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Матриця значень</legend>
+
+                <div>
+                    <label>Джерело вводу:</label>
+                    <div>
+                        <label for="matrix-input-type-file">
+                            <input
+                                type="radio"
+                                id="matrix-input-type-file"
+                                ng-model="vm.matrixInputSource"
+                                value="FILE"
+                            />
+                            Файл
+                        </label>
+
+                        <label for="matrix-input-type-keyboard">
+                            <input
+                                type="radio"
+                                id="matrix-input-type-keyboard"
+                                ng-model="vm.matrixInputSource"
+                                value="KEYBOARD"
+                            />
+                            Клавіатура
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="matrix-input-file">Файл матриці значень:</label>
+                    <input type="file" class="ha-input">
+                </div>
+
+                <div>
+                    <label for="matrix-size">Розмірність матриці значень:</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="matrixSize"
+                        id="matrix-size"
+                        ng-model="vm.matrixSize"
+                        class="ha-input"
+                    />
+                    <div
+                        ng-if="vm.taskForm.matrixSize.$dirty"
+                        ng-messages="vm.taskForm.matrixSize.$error"
+                    >
+                        <div ng-message="required">Ви не ввели розмірність матриці значень</div>
+                        <div ng-message="min">Розмірність матриці значень має бути більше нуля</div>
+                    </div>
+                </div>
+
+                <button type="button">Перегляд / Редагування матриці значень</button>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>Вектор правих частин</legend>
+
+                <div>
+                    <label>Джерело вводу:</label>
+                    <div>
+                        <label for="vector-input-type-file">
+                            <input
+                                type="radio"
+                                id="vector-input-type-file"
+                                ng-model="vm.vectorInputSource"
+                                value="FILE"
+                            />
+                            Файл
+                        </label>
+
+                        <label for="vector-input-type-keyboard">
+                            <input
+                                type="radio"
+                                id="vector-input-type-keyboard"
+                                ng-model="vm.vectorInputSource"
+                                value="KEYBOARD"
+                            />
+                            Клавіатура
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="vector-input-file">Файл вектора правих частин:</label>
+                    <input type="file" class="ha-input">
+                </div>
+
+                <div>
+                    <label for="vector-size">Розмірність вектора правих частин:</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="vectorSize"
+                        id="vector-size"
+                        ng-model="vm.vectorSize"
+                        class="ha-input"
+                    />
+                    <div
+                        ng-if="vm.taskForm.vectorSize.$dirty"
+                        ng-messages="vm.taskForm.vectorSize.$error"
+                    >
+                        <div ng-message="required">Ви не ввели розмірність вектора правих частин</div>
+                        <div ng-message="min">Розмірність вектора правих частин має бути більше нуля</div>
+                    </div>
+                </div>
+
+                <button type="button">Перегляд / Редагування значень вектора правих частин</button>
+            </fieldset>
+
+            <fieldset>
+                <legend>Параметри обчислення</legend>
+
+                <div>
+                    <label for="processes-count">Кількість паралельних процесів:</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        max="{{vm.maxProcessesCount}}"
+                        name="processesCount"
+                        id="processes-count"
+                        ng-model="vm.processesCount"
+                        class="ha-input"
+                    />
+                    <div
+                        ng-if="vm.taskForm.processesCount.$dirty"
+                        ng-messages="vm.taskForm.processesCount.$error"
+                    >
+                        <div ng-message="required">Ви не ввели кількість процесів</div>
+                        <div ng-message="min">Кількість процесів має бути більше або дорівнювати 1</div>
+                        <div ng-message="max">Кількість процесів має бути менше або дорівнювати {{vm.maxProcessesCount}}</div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="max-calculation-time">Максимальний час обчислення (c):</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="maxCalculationTime"
+                        id="max-calculation-time"
+                        ng-model="vm.maxCalculationTime"
+                        class="ha-input"
+                    />
+                    <div
+                        ng-if="vm.taskForm.maxCalculationTime.$dirty"
+                        ng-messages="vm.taskForm.maxCalculationTime.$error"
+                    >
+                        <div ng-message="required">Ви не ввели максимальний час обчислення</div>
+                        <div ng-message="min">Значення максимального часу обчислення має бути більше нуля</div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="show-calculation-time">Показати час обчислення:</label>
+                    <input
+                        type="checkbox"
+                        id="show-calculation-time"
+                        name="showCalculationTime"
+                        ng-model="vm.showCalculationTime"
+                    />
+                </div>
+            </fieldset>
+
+            <button type="submit">Почати обчислення</button>
+        </form>
+    </div>
+
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/angular-messages/angular-messages.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
