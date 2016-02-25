@@ -30,13 +30,27 @@
             },
             {
                 value: 'BAND',
-                label: 'Стрічкова матриця'
+                label: 'Розріджена матриця'
+            }
+        ];
+        vm.matrixSymmetry = null;
+        vm.availableMatrixSymmetry = [
+            {
+                value: 'GENERAL',
+                label: 'Загального виду'
+            },
+            {
+                value: 'SYMMETRIC',
+                label: 'Симетрична'
             }
         ];
         vm.matrixInputSource = 'FILE';
-        vm.matrixSize = NaN;
+        vm.matrixRows = NaN;
+        vm.matrixColumns = NaN;
+        vm.matrixValues = '';
         vm.vectorInputSource = 'FILE';
-        vm.vectorSize = NaN;
+        vm.vectorRows = NaN;
+        vm.matrixValues = '';
         vm.maxProcessesCount = navigator.hardwareConcurrency;
         vm.processesCount = vm.maxProcessesCount;
         vm.showCalculationTime = true;
