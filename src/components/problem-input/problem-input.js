@@ -22,8 +22,8 @@
             });
     }
 
-    HaProblemInputController.$inject = ['$log', 'haMatrixReader'];
-    function HaProblemInputController($log, haMatrixReader){
+    HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader'];
+    function HaProblemInputController($log, $state, haMatrixReader){
         var vm = this;
 
         vm.method = null;
@@ -77,6 +77,7 @@
         vm.maxCalculationTime = 30;
         vm.onFileChange = onFileChange;
         vm.onSelectFileInputType = onSelectFileInputType;
+        vm.solveProblem = solveProblem;
 
         //////////
 
@@ -96,6 +97,12 @@
 
         function onSelectFileInputType (fieldName) {
             vm[fieldName] = _createEmptyMatrix();
+        }
+
+        function solveProblem () {
+            if (vm.problemInputForm.$valid) {
+                $state.go('^.progress');
+            }
         }
 
         function _createEmptyMatrix () {
