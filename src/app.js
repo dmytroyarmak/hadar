@@ -192,6 +192,7 @@
         vm.showCalculationTime = true;
         vm.maxCalculationTime = 30;
         vm.onFileChange = onFileChange;
+        vm.onSelectFileInputType = onSelectFileInputType;
 
         //////////
 
@@ -207,6 +208,10 @@
             } else {
                 vm[fieldName] = _createEmptyMatrix();
             }
+        }
+
+        function onSelectFileInputType (fieldName) {
+            vm[fieldName] = _createEmptyMatrix();
         }
 
         function _createEmptyMatrix () {

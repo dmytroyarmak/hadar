@@ -57,6 +57,7 @@
                                 id="matrix-input-type-file"
                                 ng-model="vm.matrixInputSource"
                                 value="FILE"
+                                ng-change="vm.onSelectFileInputType('matrix')"
                             />
                             Файл
                         </label>
@@ -222,6 +223,7 @@
                                 id="vector-input-type-file"
                                 ng-model="vm.vectorInputSource"
                                 value="FILE"
+                                ng-change="vm.onSelectFileInputType('vector')"
                             />
                             Файл
                         </label>
