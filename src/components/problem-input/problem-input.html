@@ -1,0 +1,363 @@
+<form name="vm.problemInputForm" novalidate>
+    <fieldset class="ha-fieldset">
+        <legend>Параметри задачі</legend>
+
+        <div class="ha-form-group">
+            <label for="problem">Задача:</label>
+            <select
+                name="problem"
+                id="problem"
+                disabled
+                class="ha-input"
+            >
+                <option selected>Розв'язання СЛАР</option>
+            </select>
+        </div>
+
+        <div class="ha-form-group">
+            <label for="method">Метод розв'язання:</label>
+            <select
+                name="method"
+                id="method"
+                required
+                ng-model="vm.method"
+                ng-options="method.value as method.label for method in vm.availableMethods"
+                class="ha-input"
+            >
+                <option value="" ng-if="!vm.method">Виберіть метод розв'язання</option>
+            </select>
+            <div
+                ng-if="vm.problemInputForm.method.$dirty"
+                ng-messages="vm.problemInputForm.method.$error"
+            >
+                <div ng-message="required">Ви не обрали метод розв'язання</div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="ha-fieldset">
+        <legend>Матриця значень</legend>
+
+        <div class="ha-form-group">
+            <label>Джерело вводу:</label>
+            <div>
+                <label for="matrix-input-type-file">
+                    <input
+                        type="radio"
+                        id="matrix-input-type-file"
+                        ng-model="vm.matrixInputSource"
+                        value="FILE"
+                        ng-change="vm.onSelectFileInputType('matrix')"
+                    />
+                    Файл
+                </label>
+
+                <label for="matrix-input-type-keyboard">
+                    <input
+                        type="radio"
+                        id="matrix-input-type-keyboard"
+                        ng-model="vm.matrixInputSource"
+                        value="KEYBOARD"
+                    />
+                    Клавіатура
+                </label>
+            </div>
+        </div>
+
+        <div class="ha-form-group" ng-if="vm.matrixInputSource === 'FILE'">
+            <label for="matrix-input-file">Файл матриці значень:</label>
+            <input type="file" accept=".mtx" class="ha-input" dy-on-file-change="vm.onFileChange('matrix', $file)">
+        </div>
+
+        <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrix.values">
+            <div class="ha-form-group">
+                <label for="matrix-type">Тип матриці:</label>
+                <select
+                    name="matrixType"
+                    id="matrix-type"
+                    required
+                    ng-model="vm.matrix.matrixType"
+                    ng-options="matrixType.value as matrixType.label for matrixType in vm.availableMatrixTypes"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    class="ha-input"
+                >
+                    <option value="" ng-if="!vm.matrix.matrixType">Виберіть тип матриці</option>
+                </select>
+                <div
+                    ng-if="vm.problemInputForm.matrixType.$dirty"
+                    ng-messages="vm.problemInputForm.matrixType.$error"
+                >
+                    <div ng-message="required">Ви не обрали тип матриці</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="matrix-values-type">Тип значень:</label>
+                <select
+                    name="matrixValuesType"
+                    id="matrix-values-type"
+                    required
+                    ng-model="vm.matrix.valuesType"
+                    ng-options="valuesType.value as valuesType.label for valuesType in vm.availableValuesTypes"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    class="ha-input"
+                >
+                    <option value="" ng-if="!vm.matrix.valuesType">Виберіть тип значень</option>
+                </select>
+                <div
+                    ng-if="vm.problemInputForm.matrixValuesType.$dirty"
+                    ng-messages="vm.problemInputForm.matrixValuesType.$error"
+                >
+                    <div ng-message="required">Ви не обрали тип значень</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="matrix-symmetry">Симетричність матриці:</label>
+                <select
+                    name="matrixSymmetry"
+                    id="matrix-symmetry"
+                    required
+                    ng-model="vm.matrix.symmetry"
+                    ng-options="matrixSymmetry.value as matrixSymmetry.label for matrixSymmetry in vm.availableMatrixSymmetry"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    class="ha-input"
+                >
+                    <option value="" ng-if="!vm.matrix.symmetry">Виберіть симетричність матриці</option>
+                </select>
+                <div
+                    ng-if="vm.problemInputForm.matrixSymmetry.$dirty"
+                    ng-messages="vm.problemInputForm.matrixSymmetry.$error"
+                >
+                    <div ng-message="required">Ви не обрали симетричність матриці</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="matrix-rows">Кількість рядків:</label>
+                <input
+                    type="number"
+                    required
+                    step="1"
+                    min="1"
+                    name="matrixRows"
+                    id="matrix-rows"
+                    ng-model="vm.matrix.rows"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    class="ha-input"
+                />
+                <div
+                    ng-if="vm.problemInputForm.matrixRows.$dirty"
+                    ng-messages="vm.problemInputForm.matrixRows.$error"
+                >
+                    <div ng-message="required">Ви не ввели кількість рядків</div>
+                    <div ng-message="min">Кількість рядків має бути більше нуля</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="matrix-columns">Кількість стовпчиків:</label>
+                <input
+                    type="number"
+                    required
+                    step="1"
+                    min="1"
+                    name="matrixColumns"
+                    id="matrix-columns"
+                    ng-model="vm.matrix.columns"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    class="ha-input"
+                />
+                <div
+                    ng-if="vm.problemInputForm.matrixColumns.$dirty"
+                    ng-messages="vm.problemInputForm.matrixColumns.$error"
+                >
+                    <div ng-message="required">Ви не ввели кількість стовпчиків</div>
+                    <div ng-message="min">Кількість стовпчиків має бути більше нуля</div>
+                </div>
+            </div>
+
+
+            <div class="ha-form-group">
+                <label for="matrix-values">Значення матриці:</label>
+                <textarea
+                    rows="10"
+                    required
+                    name="matrixValues"
+                    id="matrix-values"
+                    class="ha-input"
+                    ng-model="vm.matrix.values"
+                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                ></textarea>
+
+                <div
+                    ng-if="vm.problemInputForm.matrixValues.$dirty"
+                    ng-messages="vm.problemInputForm.matrixValues.$error"
+                >
+                    <div ng-message="required">Ви не ввели значення матриці</div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="ha-fieldset">
+        <legend>Вектор правих частин</legend>
+
+        <div class="ha-form-group">
+            <label>Джерело вводу:</label>
+            <div>
+                <label for="vector-input-type-file">
+                    <input
+                        type="radio"
+                        id="vector-input-type-file"
+                        ng-model="vm.vectorInputSource"
+                        value="FILE"
+                        ng-change="vm.onSelectFileInputType('vector')"
+                    />
+                    Файл
+                </label>
+
+                <label for="vector-input-type-keyboard">
+                    <input
+                        type="radio"
+                        id="vector-input-type-keyboard"
+                        ng-model="vm.vectorInputSource"
+                        value="KEYBOARD"
+                    />
+                    Клавіатура
+                </label>
+            </div>
+        </div>
+
+        <div class="ha-form-group" ng-if="vm.vectorInputSource === 'FILE'">
+            <label for="vector-input-file">Файл вектора правих частин:</label>
+            <input type="file" accept=".mtx" class="ha-input" dy-on-file-change="vm.onFileChange('vector', $file)">
+        </div>
+
+        <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vector.values">
+            <div class="ha-form-group">
+                <label for="vector-values-type">Тип значень:</label>
+                <select
+                    name="vectorValuesType"
+                    id="vector-values-type"
+                    required
+                    ng-model="vm.vector.valuesType"
+                    ng-options="valuesType.value as valuesType.label for valuesType in vm.availableValuesTypes"
+                    ng-disabled="vm.vectorInputSource === 'FILE'"
+                    class="ha-input"
+                >
+                    <option value="" ng-if="!vm.vector.valuesType">Виберіть тип значень</option>
+                </select>
+                <div
+                    ng-if="vm.problemInputForm.vectorValuesType.$dirty"
+                    ng-messages="vm.problemInputForm.vectorValuesType.$error"
+                >
+                    <div ng-message="required">Ви не обрали тип значень</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="vector-rows">Кількість рядків:</label>
+                <input
+                    type="number"
+                    required
+                    step="1"
+                    min="1"
+                    name="vectorRows"
+                    id="vector-rows"
+                    ng-model="vm.vector.rows"
+                    ng-disabled="vm.vectorInputSource === 'FILE'"
+                    class="ha-input"
+                />
+                <div
+                    ng-if="vm.problemInputForm.vectorRows.$dirty"
+                    ng-messages="vm.problemInputForm.vectorRows.$error"
+                >
+                    <div ng-message="required">Ви не ввели кількість рядків</div>
+                    <div ng-message="min">Кількість рядків має бути більше нуля</div>
+                </div>
+            </div>
+
+            <div class="ha-form-group">
+                <label for="vector-values">Значення вектора:</label>
+                <textarea
+                    rows="10"
+                    required
+                    name="vectorValues"
+                    id="vector-values"
+                    ng-model="vm.vector.values"
+                    ng-disabled="vm.vectorInputSource === 'FILE'"
+                    class="ha-input"
+                ></textarea>
+
+                <div
+                    ng-if="vm.problemInputForm.vectorValues.$dirty"
+                    ng-messages="vm.problemInputForm.vectorValues.$error"
+                >
+                    <div ng-message="required">Ви не ввели значення вектора</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="ha-fieldset">
+        <legend>Параметри обчислення</legend>
+
+        <div class="ha-form-group">
+            <label for="processes-count">Кількість паралельних процесів:</label>
+            <input
+                type="number"
+                required
+                step="1"
+                min="1"
+                max="{{vm.maxProcessesCount}}"
+                name="processesCount"
+                id="processes-count"
+                ng-model="vm.processesCount"
+                class="ha-input"
+            />
+            <div
+                ng-if="vm.problemInputForm.processesCount.$dirty"
+                ng-messages="vm.problemInputForm.processesCount.$error"
+            >
+                <div ng-message="required">Ви не ввели кількість процесів</div>
+                <div ng-message="min">Кількість процесів має бути більше або дорівнювати 1</div>
+                <div ng-message="max">Кількість процесів має бути менше або дорівнювати {{vm.maxProcessesCount}}</div>
+            </div>
+        </div>
+
+        <div class="ha-form-group">
+            <label for="max-calculation-time">Максимальний час обчислення (c):</label>
+            <input
+                type="number"
+                required
+                step="1"
+                min="1"
+                name="maxCalculationTime"
+                id="max-calculation-time"
+                ng-model="vm.maxCalculationTime"
+                class="ha-input"
+            />
+            <div
+                ng-if="vm.problemInputForm.maxCalculationTime.$dirty"
+                ng-messages="vm.problemInputForm.maxCalculationTime.$error"
+            >
+                <div ng-message="required">Ви не ввели максимальний час обчислення</div>
+                <div ng-message="min">Значення максимального часу обчислення має бути більше нуля</div>
+            </div>
+        </div>
+
+        <div class="ha-form-group">
+            <label for="show-calculation-time">Показати час обчислення:</label>
+            <input
+                type="checkbox"
+                id="show-calculation-time"
+                name="showCalculationTime"
+                ng-model="vm.showCalculationTime"
+            />
+        </div>
+    </fieldset>
+
+    <button class="ha-button" type="submit">Почати обчислення</button>
+</form>
