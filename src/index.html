@@ -75,28 +75,49 @@
 
                 <div class="ha-form-group" ng-if="vm.matrixInputSource === 'FILE'">
                     <label for="matrix-input-file">Файл матриці значень:</label>
-                    <input type="file" class="ha-input">
+                    <input type="file" accept=".mtx" class="ha-input" dy-on-file-change="vm.onFileChange('matrix', $file)">
                 </div>
 
-                <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrixFile">
+                <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrix.values">
                     <div class="ha-form-group">
                         <label for="matrix-type">Тип матриці:</label>
                         <select
                             name="matrixType"
                             id="matrix-type"
                             required
-                            ng-model="vm.matrixType"
+                            ng-model="vm.matrix.matrixType"
                             ng-options="matrixType.value as matrixType.label for matrixType in vm.availableMatrixTypes"
                             ng-disabled="vm.matrixInputSource === 'FILE'"
                             class="ha-input"
                         >
-                            <option value="" ng-if="!vm.matrixType">Виберіть тип матриці</option>
+                            <option value="" ng-if="!vm.matrix.matrixType">Виберіть тип матриці</option>
                         </select>
                         <div
                             ng-if="vm.problemForm.matrixType.$dirty"
                             ng-messages="vm.problemForm.matrixType.$error"
                         >
-                            <div ng-message="required">Ви не обрали метод розв'язання</div>
+                            <div ng-message="required">Ви не обрали тип матриці</div>
+                        </div>
+                    </div>
+
+                    <div class="ha-form-group">
+                        <label for="matrix-values-type">Тип значень:</label>
+                        <select
+                            name="matrixValuesType"
+                            id="matrix-values-type"
+                            required
+                            ng-model="vm.matrix.valuesType"
+                            ng-options="valuesType.value as valuesType.label for valuesType in vm.availableValuesTypes"
+                            ng-disabled="vm.matrixInputSource === 'FILE'"
+                            class="ha-input"
+                        >
+                            <option value="" ng-if="!vm.matrix.valuesType">Виберіть тип значень</option>
+                        </select>
+                        <div
+                            ng-if="vm.problemForm.matrixValuesType.$dirty"
+                            ng-messages="vm.problemForm.matrixValuesType.$error"
+                        >
+                            <div ng-message="required">Ви не обрали тип значень</div>
                         </div>
                     </div>
 
@@ -106,12 +127,12 @@
                             name="matrixSymmetry"
                             id="matrix-symmetry"
                             required
-                            ng-model="vm.matrixSymmetry"
+                            ng-model="vm.matrix.symmetry"
                             ng-options="matrixSymmetry.value as matrixSymmetry.label for matrixSymmetry in vm.availableMatrixSymmetry"
                             ng-disabled="vm.matrixInputSource === 'FILE'"
                             class="ha-input"
                         >
-                            <option value="" ng-if="!vm.matrixSymmetry">Виберіть симетричність матриці</option>
+                            <option value="" ng-if="!vm.matrix.symmetry">Виберіть симетричність матриці</option>
                         </select>
                         <div
                             ng-if="vm.problemForm.matrixSymmetry.$dirty"
@@ -130,7 +151,7 @@
                             min="1"
                             name="matrixRows"
                             id="matrix-rows"
-                            ng-model="vm.matrixRows"
+                            ng-model="vm.matrix.rows"
                             ng-disabled="vm.matrixInputSource === 'FILE'"
                             class="ha-input"
                         />
@@ -152,7 +173,7 @@
                             min="1"
                             name="matrixColumns"
                             id="matrix-columns"
-                            ng-model="vm.matrixColumns"
+                            ng-model="vm.matrix.columns"
                             ng-disabled="vm.matrixInputSource === 'FILE'"
                             class="ha-input"
                         />
@@ -174,7 +195,7 @@
                             name="matrixValues"
                             id="matrix-values"
                             class="ha-input"
-                            ng-model="vm.matrixValues"
+                            ng-model="vm.matrix.values"
                             ng-disabled="vm.matrixInputSource === 'FILE'"
                         ></textarea>
 
@@ -219,10 +240,31 @@
 
                 <div class="ha-form-group" ng-if="vm.vectorInputSource === 'FILE'">
                     <label for="vector-input-file">Файл вектора правих частин:</label>
-                    <input type="file" class="ha-input">
+                    <input type="file" accept=".mtx" class="ha-input" dy-on-file-change="vm.onFileChange('vector', $file)">
                 </div>
 
-                <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vectorFile">
+                <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vector.values">
+                    <div class="ha-form-group">
+                        <label for="vector-values-type">Тип значень:</label>
+                        <select
+                            name="vectorValuesType"
+                            id="vector-values-type"
+                            required
+                            ng-model="vm.vector.valuesType"
+                            ng-options="valuesType.value as valuesType.label for valuesType in vm.availableValuesTypes"
+                            ng-disabled="vm.vectorInputSource === 'FILE'"
+                            class="ha-input"
+                        >
+                            <option value="" ng-if="!vm.vector.valuesType">Виберіть тип значень</option>
+                        </select>
+                        <div
+                            ng-if="vm.problemForm.vectorValuesType.$dirty"
+                            ng-messages="vm.problemForm.vectorValuesType.$error"
+                        >
+                            <div ng-message="required">Ви не обрали тип значень</div>
+                        </div>
+                    </div>
+
                     <div class="ha-form-group">
                         <label for="vector-rows">Кількість рядків:</label>
                         <input
@@ -232,7 +274,7 @@
                             min="1"
                             name="vectorRows"
                             id="vector-rows"
-                            ng-model="vm.vectorRows"
+                            ng-model="vm.vector.rows"
                             ng-disabled="vm.vectorInputSource === 'FILE'"
                             class="ha-input"
                         />
@@ -252,7 +294,7 @@
                             required
                             name="vectorValues"
                             id="vector-values"
-                            ng-model="vm.vectorValues"
+                            ng-model="vm.vector.values"
                             ng-disabled="vm.vectorInputSource === 'FILE'"
                             class="ha-input"
                         ></textarea>
