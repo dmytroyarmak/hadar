@@ -23,32 +23,17 @@
     function HaProblemProgressController($state, $scope, $interval){
         var vm = this;
 
-        vm.progressIndicator = 0;
+        vm.onComputationDone = onComputationDone;
         vm.cancelProblem = cancelProblem;
 
-        activate();
-
         //////////
-
-        function activate() {
-            vm.progressIntervalId = $interval(_onProgressTick, 300);
-            $scope.$on('$destroy', _clearProgressInterval);
-        }
 
         function cancelProblem () {
             $state.go('^.input');
         }
 
-        function _onProgressTick () {
-            vm.progressIndicator += 10;
-
-            if (vm.progressIndicator >= 100) {
-                $state.go('^.result');
-            }
-        }
-
-        function _clearProgressInterval () {
-            window.clearInterval(vm.progressIntervalId);
+        function onComputationDone () {
+            $state.go('^.result');
         }
     }
 }());

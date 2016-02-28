@@ -9,3 +9,11 @@ md-input-container .md-errors-spacer {
 .ha-button-big {
     padding: 8px 16px;
 }
+
+.ha-devider-small {
+    width: 200px;
+}
+
+.ha-layout-full-height {
+    height: calc(100vh - 48px);
+}

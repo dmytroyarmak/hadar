@@ -1,5 +1,6 @@
-<div>
-    <h2>Задача обчислюється...</h2>
-    <div>{{vm.progressIndicator}} / 100</div>
-    <button type="button" class="ha-button" ng-click="vm.cancelProblem()">Відмінити</button>
+<div class="ha-layout-full-height" layout="column" layout-align="center center">
+    <md-progress-circular md-diameter="100" md-mode="indeterminate" ng-click="vm.onComputationDone()"></md-progress-circular>
+    <h3 class="md-subhead">Зачекайте, будь ласка. Задача обчислюється...</h2>
+    <md-divider class="ha-devider-small"></md-divider>
+    <md-button type="button" ng-click="vm.cancelProblem()">Відмінити</md-button>
 </div>
