@@ -26,8 +26,19 @@
     function HaProblemInputController($log, $state, haMatrixReader){
         var vm = this;
 
+        vm.problem = null;
+        vm.availableProblems = [
+            {
+                value: 'SOLVE_LINEAR_SYSTEM',
+                label: 'Розв\'язання СЛАР'
+            }
+        ];
         vm.method = null;
         vm.availableMethods = [
+            {
+                value: 'AUTO',
+                label: 'Обрати автоматично'
+            },
             {
                 value: 'GAUSS',
                 label: 'Метод Гауса'
@@ -35,6 +46,16 @@
             {
                 value: 'CHOLESKY',
                 label: 'Метод Холецького'
+            }
+        ];
+        vm.availableInputSources = [
+            {
+                value: 'FILE',
+                label: 'Файл'
+            },
+            {
+                value: 'KEYBOARD',
+                label: 'Клавіатура'
             }
         ];
         vm.availableMatrixTypes = [
@@ -57,7 +78,7 @@
                 label: 'Цілі'
             }
         ];
-        vm.availableMatrixSymmetry = [
+        vm.availableSymmetry = [
             {
                 value: 'GENERAL',
                 label: 'Загального виду'
@@ -67,8 +88,8 @@
                 label: 'Симетрична'
             }
         ];
-        vm.matrixInputSource = 'FILE';
-        vm.vectorInputSource = 'FILE';
+        vm.matrixInputSource = null;
+        vm.vectorInputSource = null;
         vm.matrix = _createEmptyMatrix();
         vm.vector = _createEmptyMatrix();
         vm.maxProcessesCount = navigator.hardwareConcurrency;

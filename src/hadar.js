@@ -4,6 +4,8 @@
     angular
         .module('hadar', [
             'ui.router',
+            'ngMaterial',
+
             'hadar.common',
             'hadar.components'
         ])

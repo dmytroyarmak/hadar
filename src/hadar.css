@@ -1,5 +1,5 @@
-body {
-    font-family: monospace;
+md-input-container textarea[rows].md-input {
+    overflow: auto;
 }
 
 .ha-fieldset {
