@@ -3,15 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="hadar.css">
-    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css">
     <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css">
+    <link rel="stylesheet" href="hadar.css">
     <title>Задачі лінійної алгебри</title>
 </head>
 <body>
     <div ng-app="hadar">
-        <h1>Задачі лінійної алгебри</h1>
-        <ui-view></ui-view>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h3>Задачі лінійної алгебри</h3>
+            </div>
+        </md-toolbar>
+
+        <div layout="row">
+            <ui-view flex="80" flex-offset="10"></ui-view>
+        </div>
     </div>
 
     <script src="../node_modules/angular/angular.js"></script>

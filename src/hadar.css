@@ -2,26 +2,10 @@ md-input-container textarea[rows].md-input {
     overflow: auto;
 }
 
-.ha-fieldset {
-    margin-bottom: 2em;
+md-input-container .md-errors-spacer {
+    display: none;
 }
 
-.ha-form-group {
-    margin-bottom: .5em;
-}
-
-.ha-input {
-    display: block;
-    width: 100%;
-}
-
-.ha-button {
-    display: block;
-    width: 100%;
-    border: 1px solid black;
-    background-color: #eee;
-    font-size: 1.2em;
-    text-transform: uppercase;
-    padding: 0.5em 2em;
-    cursor: pointer;
+.ha-button-big {
+    padding: 8px 16px;
 }

@@ -1,386 +1,407 @@
 <form name="vm.problemInputForm" novalidate ng-submit="vm.solveProblem()">
-    <fieldset class="ha-fieldset">
-        <legend>Параметри задачі</legend>
+    <div md-whiteframe="3" class="md-margin">
+        <md-subheader class="md-primary">Параметри задачі</md-subheader>
 
-        <md-input-container class="md-block">
-            <label>Задача</label>
-            <md-select
-                name="problem"
-                ng-model="vm.problem"
-                required
-            >
-                <md-option
-                    ng-value="problem.value"
-                    ng-repeat="problem in vm.availableProblems"
+        <md-divider></md-divider>
+
+        <div class="md-padding">
+            <md-input-container class="md-block">
+                <label>Задача</label>
+                <md-select
+                    name="problem"
+                    ng-model="vm.problem"
+                    required
                 >
-                    {{problem.label}}
-                </md-option>
-            </md-select>
-        </md-input-container>
+                    <md-option
+                        ng-value="problem.value"
+                        ng-repeat="problem in vm.availableProblems"
+                    >
+                        {{problem.label}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
 
-        <md-input-container class="md-block">
-            <label>Метод розв'язання</label>
-            <md-select
-                name="method"
-                ng-model="vm.method"
-                required
-                ng-disabled="!vm.problem"
-            >
-                <md-option
-                    ng-value="method.value"
-                    ng-repeat="method in vm.availableMethods"
+            <md-input-container class="md-block">
+                <label>Метод розв'язання</label>
+                <md-select
+                    name="method"
+                    ng-model="vm.method"
+                    required
+                    ng-disabled="!vm.problem"
                 >
-                    {{method.label}}
-                </md-option>
-            </md-select>
-            <div
-                class="errors"
-                ng-messages="vm.problemInputForm.method.$error"
-                ng-if="vm.problemInputForm.method.$dirty"
-            >
-                <div ng-message="required">Ви не обрали метод розв'язання</div>
-            </div>
-        </md-input-container>
-    </fieldset>
-
-    <fieldset class="ha-fieldset" ng-if="vm.problem">
-        <legend>Матриця значень</legend>
-
-        <md-input-container class="md-block">
-            <label>Джерело вводу</label>
-            <md-select
-                name="matrixInputSource"
-                ng-model="vm.matrixInputSource"
-                required
-            >
-                <md-option
-                    ng-value="inputSource.value"
-                    ng-repeat="inputSource in vm.availableInputSources"
+                    <md-option
+                        ng-value="method.value"
+                        ng-repeat="method in vm.availableMethods"
+                    >
+                        {{method.label}}
+                    </md-option>
+                </md-select>
+                <div
+                    class="errors"
+                    ng-messages="vm.problemInputForm.method.$error"
+                    ng-if="vm.problemInputForm.method.$dirty"
                 >
-                    {{inputSource.label}}
-                </md-option>
-            </md-select>
-            <div
-                class="errors"
-                ng-messages="vm.problemInputForm.matrixInputSource.$error"
-                ng-if="vm.problemInputForm.matrixInputSource.$dirty"
-            >
-                <div ng-message="required">Ви не обрали джерело вводу</div>
-            </div>
-        </md-input-container>
-
-        <div layout="row" layout-align="center" ng-if="vm.matrixInputSource === 'FILE'">
-            <input
-                id="matrix-input-file"
-                class="md-visually-hidden"
-                type="file" accept=".mtx"
-                dy-on-file-change="vm.onFileChange('matrix', $file)"
-            />
-            <label for="matrix-input-file" class="md-button md-raised md-primary">
-                <md-icon>backup</md-icon>
-                {{vm.matrix.values ? 'Обрати інший файл' : 'Обрати файл'}}
-            </label>
+                    <div ng-message="required">Ви не обрали метод розв'язання</div>
+                </div>
+            </md-input-container>
         </div>
+    </div>
 
-        <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrix.values">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem">
+        <md-subheader class="md-primary">Матриця значень</md-subheader>
+
+        <md-divider></md-divider>
+
+        <div class="md-padding">
             <md-input-container class="md-block">
-                <label>Тип матриці</label>
+                <label>Джерело вводу</label>
                 <md-select
-                    name="matrixType"
-                    ng-model="vm.matrix.matrixType"
+                    name="matrixInputSource"
+                    ng-model="vm.matrixInputSource"
                     required
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
                 >
                     <md-option
-                        ng-value="matrixType.value"
-                        ng-repeat="matrixType in vm.availableMatrixTypes"
+                        ng-value="inputSource.value"
+                        ng-repeat="inputSource in vm.availableInputSources"
                     >
-                        {{matrixType.label}}
+                        {{inputSource.label}}
                     </md-option>
                 </md-select>
                 <div
                     class="errors"
-                    ng-messages="vm.problemInputForm.matrixType.$error"
-                    ng-if="vm.problemInputForm.matrixType.$dirty"
+                    ng-messages="vm.problemInputForm.matrixInputSource.$error"
+                    ng-if="vm.problemInputForm.matrixInputSource.$dirty"
                 >
-                    <div ng-message="required">Ви не обрали тип матриці</div>
+                    <div ng-message="required">Ви не обрали джерело вводу</div>
                 </div>
             </md-input-container>
 
+            <div layout="row" layout-align="center" ng-if="vm.matrixInputSource === 'FILE'">
+                <input
+                    id="matrix-input-file"
+                    class="md-visually-hidden"
+                    type="file" accept=".mtx"
+                    dy-on-file-change="vm.onFileChange('matrix', $file)"
+                />
+                <label for="matrix-input-file" class="md-button md-raised md-primary">
+                    <md-icon>backup</md-icon>
+                    {{vm.matrix.values ? 'Обрати інший файл' : 'Обрати файл'}}
+                </label>
+            </div>
+
+            <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrix.values">
+                <md-input-container class="md-block">
+                    <label>Тип матриці</label>
+                    <md-select
+                        name="matrixType"
+                        ng-model="vm.matrix.matrixType"
+                        required
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    >
+                        <md-option
+                            ng-value="matrixType.value"
+                            ng-repeat="matrixType in vm.availableMatrixTypes"
+                        >
+                            {{matrixType.label}}
+                        </md-option>
+                    </md-select>
+                    <div
+                        class="errors"
+                        ng-messages="vm.problemInputForm.matrixType.$error"
+                        ng-if="vm.problemInputForm.matrixType.$dirty"
+                    >
+                        <div ng-message="required">Ви не обрали тип матриці</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label>Тип значень</label>
+                    <md-select
+                        name="matrixValuesType"
+                        ng-model="vm.matrix.valuesType"
+                        required
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    >
+                        <md-option
+                            ng-value="valuesType.value"
+                            ng-repeat="valuesType in vm.availableValuesTypes"
+                        >
+                            {{valuesType.label}}
+                        </md-option>
+                    </md-select>
+                    <div
+                        class="errors"
+                        ng-messages="vm.problemInputForm.matrixValuesType.$error"
+                        ng-if="vm.problemInputForm.matrixValuesType.$dirty"
+                    >
+                        <div ng-message="required">Ви не обрали тип значень</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label>Симетричність матриці</label>
+                    <md-select
+                        name="matrixSymmetry"
+                        ng-model="vm.matrix.symmetry"
+                        required
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    >
+                        <md-option
+                            ng-value="symmetry.value"
+                            ng-repeat="symmetry in vm.availableSymmetry"
+                        >
+                            {{symmetry.label}}
+                        </md-option>
+                    </md-select>
+                    <div
+                        class="errors"
+                        ng-messages="vm.problemInputForm.matrixSymmetry.$error"
+                        ng-if="vm.problemInputForm.matrixSymmetry.$dirty"
+                    >
+                        <div ng-message="required">Ви не обрали симетричність матриці</div>
+                    </div>
+                </md-input-container>
+
+
+                <md-input-container class="md-block">
+                    <label>Кількість рядків</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="matrixRows"
+                        ng-model="vm.matrix.rows"
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    />
+                    <div
+                        class="errors"
+                        ng-if="vm.problemInputForm.matrixRows.$dirty"
+                        ng-messages="vm.problemInputForm.matrixRows.$error"
+                    >
+                        <div ng-message="required">Ви не ввели кількість рядків</div>
+                        <div ng-message="min">Кількість рядків має бути більше нуля</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label>Кількість стовпчиків</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="matrixColumns"
+                        id="matrix-columns"
+                        ng-model="vm.matrix.columns"
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    />
+                    <div
+                        class="errors"
+                        ng-if="vm.problemInputForm.matrixColumns.$dirty"
+                        ng-messages="vm.problemInputForm.matrixColumns.$error"
+                    >
+                        <div ng-message="required">Ви не ввели кількість стовпчиків</div>
+                        <div ng-message="min">Кількість стовпчиків має бути більше нуля</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label>Значення матриці</label>
+                    <textarea
+                        rows="10"
+                        required
+                        name="matrixValues"
+                        ng-model="vm.matrix.values"
+                        ng-disabled="vm.matrixInputSource === 'FILE'"
+                    ></textarea>
+
+                    <div
+                        class="errors"
+                        ng-if="vm.problemInputForm.matrixValues.$dirty"
+                        ng-messages="vm.problemInputForm.matrixValues.$error"
+                    >
+                        <div ng-message="required">Ви не ввели значення матриці</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem">
+        <md-subheader class="md-primary">Вектор правих частин</md-subheader>
+
+        <md-divider></md-divider>
+
+        <div class="md-padding">
             <md-input-container class="md-block">
-                <label>Тип значень</label>
+                <label>Джерело вводу</label>
                 <md-select
-                    name="matrixValuesType"
-                    ng-model="vm.matrix.valuesType"
+                    name="vectorInputSource"
+                    ng-model="vm.vectorInputSource"
                     required
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
                 >
                     <md-option
-                        ng-value="valuesType.value"
-                        ng-repeat="valuesType in vm.availableValuesTypes"
+                        ng-value="inputSource.value"
+                        ng-repeat="inputSource in vm.availableInputSources"
                     >
-                        {{valuesType.label}}
+                        {{inputSource.label}}
                     </md-option>
                 </md-select>
                 <div
                     class="errors"
-                    ng-messages="vm.problemInputForm.matrixValuesType.$error"
-                    ng-if="vm.problemInputForm.matrixValuesType.$dirty"
+                    ng-messages="vm.problemInputForm.vectorInputSource.$error"
+                    ng-if="vm.problemInputForm.vectorInputSource.$dirty"
                 >
-                    <div ng-message="required">Ви не обрали тип значень</div>
+                    <div ng-message="required">Ви не обрали джерело вводу</div>
                 </div>
             </md-input-container>
 
-            <md-input-container class="md-block">
-                <label>Симетричність матриці</label>
-                <md-select
-                    name="matrixSymmetry"
-                    ng-model="vm.matrix.symmetry"
-                    required
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
-                >
-                    <md-option
-                        ng-value="symmetry.value"
-                        ng-repeat="symmetry in vm.availableSymmetry"
+            <div layout="row" layout-align="center" ng-if="vm.vectorInputSource === 'FILE'">
+                <input
+                    id="vector-input-file"
+                    class="md-visually-hidden"
+                    type="file" accept=".mtx"
+                    dy-on-file-change="vm.onFileChange('vector', $file)"
+                />
+                <label for="vector-input-file" class="md-button md-raised md-primary">
+                    <md-icon>backup</md-icon>
+                    {{vm.vector.values ? 'Обрати інший файл' : 'Обрати файл'}}
+                </label>
+            </div>
+
+            <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vector.values">
+
+                <md-input-container class="md-block">
+                    <label>Тип значень</label>
+                    <md-select
+                        name="vectorValuesType"
+                        ng-model="vm.vector.valuesType"
+                        required
+                        ng-disabled="vm.vectorInputSource === 'FILE'"
                     >
-                        {{symmetry.label}}
-                    </md-option>
-                </md-select>
-                <div
-                    class="errors"
-                    ng-messages="vm.problemInputForm.matrixSymmetry.$error"
-                    ng-if="vm.problemInputForm.matrixSymmetry.$dirty"
-                >
-                    <div ng-message="required">Ви не обрали симетричність матриці</div>
-                </div>
-            </md-input-container>
+                        <md-option
+                            ng-value="valuesType.value"
+                            ng-repeat="valuesType in vm.availableValuesTypes"
+                        >
+                            {{valuesType.label}}
+                        </md-option>
+                    </md-select>
+                    <div
+                        class="errors"
+                        ng-messages="vm.problemInputForm.vectorValuesType.$error"
+                        ng-if="vm.problemInputForm.vectorValuesType.$dirty"
+                    >
+                        <div ng-message="required">Ви не обрали тип значень</div>
+                    </div>
+                </md-input-container>
 
+                <md-input-container class="md-block">
+                    <label>Кількість рядків</label>
+                    <input
+                        type="number"
+                        required
+                        step="1"
+                        min="1"
+                        name="vectorRows"
+                        ng-model="vm.vector.rows"
+                        ng-disabled="vm.vectorInputSource === 'FILE'"
+                    />
+                    <div
+                        class="errors"
+                        ng-if="vm.problemInputForm.vectorRows.$dirty"
+                        ng-messages="vm.problemInputForm.vectorRows.$error"
+                    >
+                        <div ng-message="required">Ви не ввели кількість рядків</div>
+                        <div ng-message="min">Кількість рядків має бути більше нуля</div>
+                    </div>
+                </md-input-container>
 
+                <md-input-container class="md-block">
+                    <label>Значення вектора</label>
+                    <textarea
+                        rows="10"
+                        required
+                        name="vectorValues"
+                        ng-model="vm.vector.values"
+                        ng-disabled="vm.vectorInputSource === 'FILE'"
+                    ></textarea>
+
+                    <div
+                        class="errors"
+                        ng-if="vm.problemInputForm.vectorValues.$dirty"
+                        ng-messages="vm.problemInputForm.vectorValues.$error"
+                    >
+                        <div ng-message="required">Ви не ввели значення вектора</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+
+    <div md-whiteframe="3" class="md-margin">
+        <md-subheader class="md-primary">Параметри обчислення</md-subheader>
+
+        <md-divider></md-divider>
+
+        <div class="md-padding">
             <md-input-container class="md-block">
-                <label>Кількість рядків</label>
+                <label>Кількість паралельних процесів</label>
                 <input
                     type="number"
                     required
                     step="1"
                     min="1"
-                    name="matrixRows"
-                    ng-model="vm.matrix.rows"
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    max="{{vm.maxProcessesCount}}"
+                    name="processesCount"
+                    ng-model="vm.processesCount"
                 />
                 <div
                     class="errors"
-                    ng-if="vm.problemInputForm.matrixRows.$dirty"
-                    ng-messages="vm.problemInputForm.matrixRows.$error"
+                    ng-if="vm.problemInputForm.processesCount.$dirty"
+                    ng-messages="vm.problemInputForm.processesCount.$error"
                 >
-                    <div ng-message="required">Ви не ввели кількість рядків</div>
-                    <div ng-message="min">Кількість рядків має бути більше нуля</div>
+                    <div ng-message="required">Ви не ввели кількість процесів</div>
+                    <div ng-message="min">Кількість процесів має бути більше або дорівнювати 1</div>
+                    <div ng-message="max">Кількість процесів має бути менше або дорівнювати {{vm.maxProcessesCount}}</div>
                 </div>
             </md-input-container>
 
             <md-input-container class="md-block">
-                <label>Кількість стовпчиків</label>
+                <label>Максимальний час обчислення (c)</label>
                 <input
                     type="number"
                     required
                     step="1"
                     min="1"
-                    name="matrixColumns"
-                    id="matrix-columns"
-                    ng-model="vm.matrix.columns"
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
+                    name="maxCalculationTime"
+                    ng-model="vm.maxCalculationTime"
                 />
                 <div
                     class="errors"
-                    ng-if="vm.problemInputForm.matrixColumns.$dirty"
-                    ng-messages="vm.problemInputForm.matrixColumns.$error"
+                    ng-if="vm.problemInputForm.maxCalculationTime.$dirty"
+                    ng-messages="vm.problemInputForm.maxCalculationTime.$error"
                 >
-                    <div ng-message="required">Ви не ввели кількість стовпчиків</div>
-                    <div ng-message="min">Кількість стовпчиків має бути більше нуля</div>
+                    <div ng-message="required">Ви не ввели максимальний час обчислення</div>
+                    <div ng-message="min">Значення максимального часу обчислення має бути більше нуля</div>
                 </div>
             </md-input-container>
 
-            <md-input-container class="md-block">
-                <label>Значення матриці</label>
-                <textarea
-                    rows="10"
-                    required
-                    name="matrixValues"
-                    ng-model="vm.matrix.values"
-                    ng-disabled="vm.matrixInputSource === 'FILE'"
-                ></textarea>
-
-                <div
-                    class="errors"
-                    ng-if="vm.problemInputForm.matrixValues.$dirty"
-                    ng-messages="vm.problemInputForm.matrixValues.$error"
-                >
-                    <div ng-message="required">Ви не ввели значення матриці</div>
-                </div>
-            </md-input-container>
+            <md-switch
+                class="md-primary"
+                ng-model="vm.showCalculationTime"
+                aria-label="Показати час обчислення?"
+            >
+                Показати час обчислення?
+            </md-switch>
         </div>
+    </div>
 
-    </fieldset>
+    <div layout="row">
+         <md-button flex="100" type="submit" class="md-raised md-accent ha-button-big" ng-disabled="vm.problemInputForm.$invalid">
+            <md-icon>check</md-icon>
+            Почати обчислення
+        </md-button>
+    </div>
 
-    <fieldset class="ha-fieldset" ng-if="vm.problem">
-        <legend>Вектор правих частин</legend>
-
-        <md-input-container class="md-block">
-            <label>Джерело вводу</label>
-            <md-select
-                name="vectorInputSource"
-                ng-model="vm.vectorInputSource"
-                required
-            >
-                <md-option
-                    ng-value="inputSource.value"
-                    ng-repeat="inputSource in vm.availableInputSources"
-                >
-                    {{inputSource.label}}
-                </md-option>
-            </md-select>
-            <div
-                class="errors"
-                ng-messages="vm.problemInputForm.vectorInputSource.$error"
-                ng-if="vm.problemInputForm.vectorInputSource.$dirty"
-            >
-                <div ng-message="required">Ви не обрали джерело вводу</div>
-            </div>
-        </md-input-container>
-
-        <div layout="row" layout-align="center" ng-if="vm.vectorInputSource === 'FILE'">
-            <input
-                id="vector-input-file"
-                class="md-visually-hidden"
-                type="file" accept=".mtx"
-                dy-on-file-change="vm.onFileChange('vector', $file)"
-            />
-            <label for="vector-input-file" class="md-button md-raised md-primary">
-                <md-icon>backup</md-icon>
-                {{vm.vector.values ? 'Обрати інший файл' : 'Обрати файл'}}
-            </label>
-        </div>
-
-        <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vector.values">
-
-            <md-input-container class="md-block">
-                <label>Тип значень</label>
-                <md-select
-                    name="vectorValuesType"
-                    ng-model="vm.vector.valuesType"
-                    required
-                    ng-disabled="vm.vectorInputSource === 'FILE'"
-                >
-                    <md-option
-                        ng-value="valuesType.value"
-                        ng-repeat="valuesType in vm.availableValuesTypes"
-                    >
-                        {{valuesType.label}}
-                    </md-option>
-                </md-select>
-                <div
-                    class="errors"
-                    ng-messages="vm.problemInputForm.vectorValuesType.$error"
-                    ng-if="vm.problemInputForm.vectorValuesType.$dirty"
-                >
-                    <div ng-message="required">Ви не обрали тип значень</div>
-                </div>
-            </md-input-container>
-
-            <md-input-container class="md-block">
-                <label>Кількість рядків</label>
-                <input
-                    type="number"
-                    required
-                    step="1"
-                    min="1"
-                    name="vectorRows"
-                    ng-model="vm.vector.rows"
-                    ng-disabled="vm.vectorInputSource === 'FILE'"
-                />
-                <div
-                    class="errors"
-                    ng-if="vm.problemInputForm.vectorRows.$dirty"
-                    ng-messages="vm.problemInputForm.vectorRows.$error"
-                >
-                    <div ng-message="required">Ви не ввели кількість рядків</div>
-                    <div ng-message="min">Кількість рядків має бути більше нуля</div>
-                </div>
-            </md-input-container>
-
-            <md-input-container class="md-block">
-                <label>Значення вектора</label>
-                <textarea
-                    rows="10"
-                    required
-                    name="vectorValues"
-                    ng-model="vm.vector.values"
-                    ng-disabled="vm.vectorInputSource === 'FILE'"
-                ></textarea>
-
-                <div
-                    class="errors"
-                    ng-if="vm.problemInputForm.vectorValues.$dirty"
-                    ng-messages="vm.problemInputForm.vectorValues.$error"
-                >
-                    <div ng-message="required">Ви не ввели значення вектора</div>
-                </div>
-            </md-input-container>
-        </div>
-    </fieldset>
-
-    <fieldset class="ha-fieldset">
-        <legend>Параметри обчислення</legend>
-
-        <md-input-container class="md-block">
-            <label>Кількість паралельних процесів</label>
-            <input
-                type="number"
-                required
-                step="1"
-                min="1"
-                max="{{vm.maxProcessesCount}}"
-                name="processesCount"
-                ng-model="vm.processesCount"
-            />
-            <div
-                class="errors"
-                ng-if="vm.problemInputForm.processesCount.$dirty"
-                ng-messages="vm.problemInputForm.processesCount.$error"
-            >
-                <div ng-message="required">Ви не ввели кількість процесів</div>
-                <div ng-message="min">Кількість процесів має бути більше або дорівнювати 1</div>
-                <div ng-message="max">Кількість процесів має бути менше або дорівнювати {{vm.maxProcessesCount}}</div>
-            </div>
-        </md-input-container>
-
-        <md-input-container class="md-block">
-            <label>Максимальний час обчислення (c)</label>
-            <input
-                type="number"
-                required
-                step="1"
-                min="1"
-                name="maxCalculationTime"
-                ng-model="vm.maxCalculationTime"
-            />
-            <div
-                class="errors"
-                ng-if="vm.problemInputForm.maxCalculationTime.$dirty"
-                ng-messages="vm.problemInputForm.maxCalculationTime.$error"
-            >
-                <div ng-message="required">Ви не ввели максимальний час обчислення</div>
-                <div ng-message="min">Значення максимального часу обчислення має бути більше нуля</div>
-            </div>
-        </md-input-container>
-
-        <md-switch
-            class="md-primary"
-            ng-model="vm.showCalculationTime"
-            aria-label="Показати час обчислення?"
-        >
-            Показати час обчислення?
-        </md-switch>
-    </fieldset>
-
-    <button class="ha-button" type="submit">Почати обчислення</button>
 </form>
