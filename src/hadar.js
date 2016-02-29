@@ -14,12 +14,5 @@
     hadarConfig.$inject = ['$urlRouterProvider', '$stateProvider'];
     function hadarConfig($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise('/problem/input');
-
-        $stateProvider
-            .state('problem', {
-                abstract: true,
-                url: '/problem',
-                template: '<ui-view></ui-view>'
-            });
     }
 }());
