@@ -1,1 +1,33 @@
-<h2>Результат обчислення</h2>
+<div md-whiteframe="3" class="md-margin">
+    <md-subheader class="md-primary">Результат обчислення</md-subheader>
+
+    <md-divider></md-divider>
+
+    <div class="md-padding">
+        <md-input-container class="md-block">
+            <label>Час обчислення (c)</label>
+            <input
+                type="text"
+                name="calculationTime"
+                ng-model="vm.calculationTime"
+                readonly
+            />
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Результат</label>
+            <textarea
+                rows="10"
+                ng-model="vm.result"
+                readonly
+            ></textarea>
+        </md-input-container>
+
+        <div layout="row" layout-align="center">
+             <md-button type="button" class="md-raised md-accent" ng-click="vm.downloadResult()">
+                <md-icon>file_download</md-icon>
+                Завантажити результат
+            </md-button>
+        </div>
+    </div>
+</div>

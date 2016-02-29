@@ -99,6 +99,7 @@
         vm.onFileChange = onFileChange;
         vm.onSelectFileInputType = onSelectFileInputType;
         vm.solveProblem = solveProblem;
+        vm.isSubmitButtonDisabled = isSubmitButtonDisabled;
 
         //////////
 
@@ -118,6 +119,10 @@
 
         function onSelectFileInputType (fieldName) {
             vm[fieldName] = _createEmptyMatrix();
+        }
+
+        function isSubmitButtonDisabled () {
+            return vm.problemInputForm.$invalid || !vm.matrix.values || !vm.vector.values;
         }
 
         function solveProblem () {
