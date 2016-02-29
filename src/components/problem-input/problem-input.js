@@ -24,30 +24,52 @@
 
     HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader'];
     function HaProblemInputController($log, $state, haMatrixReader){
+        var PROBME_SWITCHER = false;
+
         var vm = this;
 
         vm.problem = null;
-        vm.availableProblems = [
-            {
-                value: 'SOLVE_LINEAR_SYSTEM',
-                label: 'Розв\'язання СЛАР'
-            }
-        ];
+
+        if (PROBME_SWITCHER) {
+            vm.availableProblems = [
+                {
+                    value: 'SOLVE_LINEAR_SYSTEM',
+                    label: 'Розв\'язання СЛАР'
+                }
+            ];
+            vm.availableMethods = [
+                {
+                    value: 'AUTO',
+                    label: 'Обрати автоматично'
+                },
+                {
+                    value: 'GAUSS',
+                    label: 'Метод Гауса'
+                },
+                {
+                    value: 'CHOLESKY',
+                    label: 'Метод Холецького'
+                }
+            ];
+        } else {
+            vm.availableProblems = [
+                {
+                    value: 'FULL_EIGENVALUE_3_DIAG_SIM',
+                    label: 'Повна стандартна АПВЗ з трьохдіагональною симетричною матрицею'
+                },
+                {
+                    value: 'FULL_EIGENVALUE_DENSE_SYM',
+                    label: 'Повна стандартна АПВЗ з щільною симетричною матрицею'
+                },
+                {
+                    value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
+                    label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
+                }
+            ];
+            vm.availableMethods = [];
+        }
+
         vm.method = null;
-        vm.availableMethods = [
-            {
-                value: 'AUTO',
-                label: 'Обрати автоматично'
-            },
-            {
-                value: 'GAUSS',
-                label: 'Метод Гауса'
-            },
-            {
-                value: 'CHOLESKY',
-                label: 'Метод Холецького'
-            }
-        ];
         vm.availableInputSources = [
             {
                 value: 'FILE',
@@ -122,7 +144,7 @@
         }
 
         function isSubmitButtonDisabled () {
-            return vm.problemInputForm.$invalid || !vm.matrix.values || !vm.vector.values;
+            return vm.problemInputForm.$invalid || !vm.matrix.values || (vm.problem === 'SOLVE_LINEAR_SYSTEM' && !vm.vector.values);
         }
 
         function solveProblem () {

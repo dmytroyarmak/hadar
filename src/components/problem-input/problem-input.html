@@ -21,7 +21,7 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block">
+            <md-input-container class="md-block" ng-if="vm.availableMethods.length">
                 <label>Метод розв'язання</label>
                 <md-select
                     name="method"
@@ -228,7 +228,7 @@
         </div>
     </div>
 
-    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem === 'SOLVE_LINEAR_SYSTEM'">
         <md-subheader class="md-primary">Вектор правих частин</md-subheader>
 
         <md-divider></md-divider>
@@ -339,7 +339,7 @@
         </div>
     </div>
 
-    <div md-whiteframe="3" class="md-margin" ng-if="vm.matrix.values && vm.vector.values">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.matrix.values && (vm.problem !== 'SOLVE_LINEAR_SYSTEM' || vm.vector.values)">
         <md-subheader class="md-primary">Параметри обчислення</md-subheader>
 
         <md-divider></md-divider>
