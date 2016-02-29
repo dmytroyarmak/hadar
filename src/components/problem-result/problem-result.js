@@ -25,8 +25,8 @@
 
         vm.downloadResult = downloadResult;
         vm.calculationTime = +(2 + 5 * Math.random()).toFixed(2);
-        vm.result = _.range(127).map(function(x) {
-            return (x + 1) * (Math.random() - 0.5);
+        vm.result = _.range(8).map(function(x) {
+            return (Math.random() * Math.pow(10, _.random(-3, 3))).toExponential(10);
         }).join('\n');
 
         //////////

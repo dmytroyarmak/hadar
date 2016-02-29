@@ -24,13 +24,29 @@
 
     HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader'];
     function HaProblemInputController($log, $state, haMatrixReader){
-        var PROBME_SWITCHER = false;
+        var SWITCH_TO_EIGENVALUE = true;
 
         var vm = this;
 
         vm.problem = null;
 
-        if (PROBME_SWITCHER) {
+        if (SWITCH_TO_EIGENVALUE) {
+            vm.availableProblems = [
+                {
+                    value: 'FULL_EIGENVALUE_3_DIAG_SIM',
+                    label: 'Повна стандартна АПВЗ з трьохдіагональною симетричною матрицею'
+                },
+                {
+                    value: 'FULL_EIGENVALUE_DENSE_SYM',
+                    label: 'Повна стандартна АПВЗ з щільною симетричною матрицею'
+                },
+                {
+                    value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
+                    label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
+                }
+            ];
+            vm.availableMethods = [];
+        } else {
             vm.availableProblems = [
                 {
                     value: 'SOLVE_LINEAR_SYSTEM',
@@ -51,22 +67,6 @@
                     label: 'Метод Холецького'
                 }
             ];
-        } else {
-            vm.availableProblems = [
-                {
-                    value: 'FULL_EIGENVALUE_3_DIAG_SIM',
-                    label: 'Повна стандартна АПВЗ з трьохдіагональною симетричною матрицею'
-                },
-                {
-                    value: 'FULL_EIGENVALUE_DENSE_SYM',
-                    label: 'Повна стандартна АПВЗ з щільною симетричною матрицею'
-                },
-                {
-                    value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
-                    label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
-                }
-            ];
-            vm.availableMethods = [];
         }
 
         vm.method = null;
