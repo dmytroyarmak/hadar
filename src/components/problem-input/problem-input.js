@@ -6,6 +6,7 @@
             'ngMessages',
             'ui.router',
             'hadar.common.services.matrixReader',
+            'hadar.common.services.solver',
             'hadar.common.directives.onFileChange'
         ])
         .config(problemInputConfig)
@@ -22,9 +23,9 @@
             });
     }
 
-    HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader'];
-    function HaProblemInputController($log, $state, haMatrixReader){
-        var SWITCH_TO_EIGENVALUE = true;
+    HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader', 'haSolver'];
+    function HaProblemInputController($log, $state, haMatrixReader, haSolver){
+        var SWITCH_TO_EIGENVALUE = false;
 
         var vm = this;
 
@@ -144,11 +145,13 @@
         }
 
         function isSubmitButtonDisabled () {
-            return vm.problemInputForm.$invalid || !vm.matrix.values || (vm.problem === 'SOLVE_LINEAR_SYSTEM' && !vm.vector.values);
+            return !vm.problemInputForm || vm.problemInputForm.$invalid || !vm.matrix.values || (vm.problem === 'SOLVE_LINEAR_SYSTEM' && !vm.vector.values);
         }
 
         function solveProblem () {
             if (vm.problemInputForm.$valid) {
+                // FIXME: Always run gaussJordanElimination for now
+                haSolver.gaussJordanElimination(vm.matrix, vm.vector);
                 $state.go('^.progress');
             }
         }

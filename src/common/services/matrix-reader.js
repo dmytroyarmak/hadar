@@ -56,8 +56,8 @@
             }
 
             var rows = parseInt(metaLineMatchResult[1], 10);
-            var columns = parseInt(metaLineMatchResult[1], 10);
-            var entities = parseInt(metaLineMatchResult[2], 10);
+            var columns = parseInt(metaLineMatchResult[2], 10);
+            var entities = parseInt(metaLineMatchResult[3], 10);
             var values = valueLines.join('\n');
 
             return {

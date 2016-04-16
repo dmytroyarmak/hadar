@@ -3,7 +3,8 @@
 
     angular
         .module('hadar.components.problemProgress', [
-            'ui.router'
+            'ui.router',
+            'hadar.common.services.solver'
         ])
         .config(problemProgressConfig)
         .controller('HaProblemProgressController', HaProblemProgressController);
@@ -19,21 +20,33 @@
             });
     }
 
-    HaProblemProgressController.$inject = ['$state', '$scope', '$interval'];
-    function HaProblemProgressController($state, $scope, $interval){
+    HaProblemProgressController.$inject = ['$state', '$log', 'haSolver'];
+    function HaProblemProgressController($state, $log, haSolver){
         var vm = this;
 
-        vm.onComputationDone = onComputationDone;
         vm.cancelProblem = cancelProblem;
+
+        activate();
 
         //////////
 
-        function cancelProblem () {
-            $state.go('^.input');
+        function activate() {
+            if (haSolver.hasCurrentProblem()) {
+                haSolver
+                    .getCurrentProblem()
+                    .then(function onComputationDone () {
+                        $state.go('^.result');
+                    }, function onComputationFailed(error) {
+                        $log.error('Problem computation failed', error);
+                    });
+            } else {
+                $state.go('^.input');
+            }
         }
 
-        function onComputationDone () {
-            $state.go('^.result');
+        function cancelProblem () {
+            haSolver.cancelCurrentProblem();
+            $state.go('^.input');
         }
     }
 }());

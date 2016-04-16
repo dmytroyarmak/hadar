@@ -4,6 +4,7 @@
     angular
         .module('hadar.common.services', [
             'hadar.common.services.fileReader',
-            'hadar.common.services.matrixReader'
+            'hadar.common.services.matrixReader',
+            'hadar.common.services.solver'
         ]);
 }());

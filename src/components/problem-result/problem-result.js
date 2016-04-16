@@ -3,7 +3,8 @@
 
     angular
         .module('hadar.components.problemResult', [
-            'ui.router'
+            'ui.router',
+            'hadar.common.services.solver'
         ])
         .config(problemResultConfig)
         .controller('HaProblemResultController', HaProblemResultController);
@@ -19,17 +20,28 @@
             });
     }
 
-    HaProblemResultController.$inject = [];
-    function HaProblemResultController(){
+    HaProblemResultController.$inject = ['$state', 'haSolver'];
+    function HaProblemResultController($state, haSolver){
         var vm = this;
 
         vm.downloadResult = downloadResult;
-        vm.calculationTime = +(2 + 5 * Math.random()).toFixed(2);
-        vm.result = _.range(8).map(function(x) {
-            return (Math.random() * Math.pow(10, _.random(-3, 3))).toExponential(10);
-        }).join('\n');
+        vm.result = null;
+
+        activate();
 
         //////////
+
+        function activate() {
+            if (haSolver.hasCurrentProblem()) {
+                haSolver
+                    .getCurrentProblem()
+                    .then(function onComputationDone (result) {
+                        vm.result = result;
+                    });
+            } else {
+                $state.go('^.input');
+            }
+        }
 
         function downloadResult () {
             var downloadLink = document.createElement('a');
