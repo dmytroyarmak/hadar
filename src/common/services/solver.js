@@ -68,13 +68,17 @@
             var matrixArray = new Float64Array(matrixBuffer);
             if (matrix.matrixType === 'DENSE') {
                 for (var i = 0; i < regularArray.length; i += 1) {
-                    matrixArray[i] = regularArray[i];
+                    matrixArray[i] = regularArray[_byColumnToByRowIndex(i, matrix.columns)];
                 }
             } else {
                 // TODO: Implement sparse matrix creation
                 throw new Error('Sparse matrix is not ready to use');
             }
             return matrixArray;
+        }
+
+        function _byColumnToByRowIndex(i, n) {
+            return (i % n) * n + Math.floor(i / n);
         }
     }
 }());
