@@ -60,20 +60,42 @@
         }
 
         function _convertMatrixToSharedArray(matrix) {
+            switch(matrix.matrixType) {
+                case 'DENSE': return _convertDenseMatrixToSharedArray(matrix);
+                case 'SPARSE': return _convertSparseMatrixToSharedArray(matrix);
+                default: throw new Error('Unsupported matrix type');
+            }
+        }
+
+        function _convertSparseMatrixToSharedArray(matrix) {
             var numberOfValues = matrix.rows * matrix.columns;
             var matrixBuffer = new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * numberOfValues);
+            var matrixArray = new Float64Array(matrixBuffer);
+            matrix.values.trimRight().split('\n').map(function(row) {
+                return row.split(' ').map(function(value) {
+                    return parseInt(value, 10);
+                });
+            }).forEach(function(valueRow) {
+                var i = valueRow[0] - 1;
+                var j = valueRow[1] - 1;
+                var value = valueRow[2];
+                matrixArray[i * matrix.columns + j] = value;
+            });
+
+            return matrixArray;
+        }
+
+        function _convertDenseMatrixToSharedArray(matrix) {
+            var numberOfValues = matrix.rows * matrix.columns;
+            var matrixBuffer = new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * numberOfValues);
+            var matrixArray = new Float64Array(matrixBuffer);
             var regularArray = matrix.values.trimRight().split('\n').map(function(row) {
                 return parseInt(row, 10);
             });
-            var matrixArray = new Float64Array(matrixBuffer);
-            if (matrix.matrixType === 'DENSE') {
-                for (var i = 0; i < regularArray.length; i += 1) {
-                    matrixArray[i] = regularArray[_byColumnToByRowIndex(i, matrix.columns)];
-                }
-            } else {
-                // TODO: Implement sparse matrix creation
-                throw new Error('Sparse matrix is not ready to use');
+            for (var i = 0; i < regularArray.length; i += 1) {
+                matrixArray[i] = regularArray[_byColumnToByRowIndex(i, matrix.columns)];
             }
+
             return matrixArray;
         }
 
