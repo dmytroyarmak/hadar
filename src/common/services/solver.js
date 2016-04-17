@@ -11,6 +11,7 @@
         var _currentProblem;
 
         var service = {
+            init: init,
             getCurrentProblem: getCurrentProblem,
             hasCurrentProblem: hasCurrentProblem,
             cancelCurrentProblem: cancelCurrentProblem,
@@ -20,6 +21,10 @@
         return service;
 
         //////////
+
+        function init() {
+            _getPlalibInstance();
+        }
 
 
         function getCurrentProblem() {
@@ -44,7 +49,7 @@
                 var startTime = window.performance.now();
                 _currentProblem = problem;
                 _currentProblem.resultPromise = _getPlalibInstance()
-                    .gaussJordanEliminationPar(n, a, b)
+                    .gaussJordanEliminationPar(n, a, b, problem.processesCount)
                     .then(function() {
                         var endTime = window.performance.now();
                         return {
@@ -60,7 +65,8 @@
 
         function _getPlalibInstance () {
             _plalib = _plalib || new Plalib({
-                workerUrl: '../node_modules/plalib/dist/plalib-worker.js'
+                workerUrl: '../node_modules/plalib/dist/plalib-worker.js',
+                workersAmount: navigator.hardwareConcurrency
             });
             return _plalib;
         }

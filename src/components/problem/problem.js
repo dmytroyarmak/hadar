@@ -3,7 +3,8 @@
 
     angular
         .module('hadar.components.problem', [
-            'ui.router'
+            'ui.router',
+            'hadar.common.services.solver'
         ])
         .config(problemConfig)
         .controller('HaProblemController', HaProblemController);
@@ -20,12 +21,18 @@
             });
     }
 
-    HaProblemController.$inject = ['$log', '$state', 'haMatrixReader'];
-    function HaProblemController($log, $state, haMatrixReader){
+    HaProblemController.$inject = ['$log', '$state', 'haSolver'];
+    function HaProblemController($log, $state, haSolver){
         var vm = this;
         vm.getSelectedTabIndex = getSelectedTabIndex;
 
+        activate();
+
         //////////
+
+        function activate() {
+            haSolver.init();
+        }
 
         function getSelectedTabIndex() {
             switch($state.$current.name) {
