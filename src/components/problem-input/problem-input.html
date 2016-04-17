@@ -8,15 +8,15 @@
             <md-input-container class="md-block">
                 <label>Задача</label>
                 <md-select
-                    name="problem"
-                    ng-model="vm.problem"
+                    name="problemType"
+                    ng-model="vm.problem.type"
                     required
                 >
                     <md-option
-                        ng-value="problem.value"
-                        ng-repeat="problem in vm.availableProblems"
+                        ng-value="problemType.value"
+                        ng-repeat="problemType in vm.availableProblemTypes"
                     >
-                        {{problem.label}}
+                        {{problemType.label}}
                     </md-option>
                 </md-select>
             </md-input-container>
@@ -25,9 +25,9 @@
                 <label>Метод розв'язання</label>
                 <md-select
                     name="method"
-                    ng-model="vm.method"
+                    ng-model="vm.problem.method"
                     required
-                    ng-disabled="!vm.problem"
+                    ng-disabled="!vm.problem.type"
                 >
                     <md-option
                         ng-value="method.value"
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem.type">
         <md-subheader class="md-primary">Матриця значень</md-subheader>
 
         <md-divider></md-divider>
@@ -85,16 +85,16 @@
                 />
                 <label for="matrix-input-file" class="md-button md-raised md-primary">
                     <md-icon>backup</md-icon>
-                    {{vm.matrix.values ? 'Обрати інший файл' : 'Обрати файл'}}
+                    {{vm.problem.matrix.values ? 'Обрати інший файл' : 'Обрати файл'}}
                 </label>
             </div>
 
-            <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.matrix.values">
+            <div ng-if="vm.matrixInputSource === 'KEYBOARD' || vm.problem.matrix.values">
                 <md-input-container class="md-block">
                     <label>Тип матриці</label>
                     <md-select
                         name="matrixType"
-                        ng-model="vm.matrix.matrixType"
+                        ng-model="vm.problem.matrix.matrixType"
                         required
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     >
@@ -118,7 +118,7 @@
                     <label>Тип значень</label>
                     <md-select
                         name="matrixValuesType"
-                        ng-model="vm.matrix.valuesType"
+                        ng-model="vm.problem.matrix.valuesType"
                         required
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     >
@@ -142,7 +142,7 @@
                     <label>Симетричність матриці</label>
                     <md-select
                         name="matrixSymmetry"
-                        ng-model="vm.matrix.symmetry"
+                        ng-model="vm.problem.matrix.symmetry"
                         required
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     >
@@ -171,7 +171,7 @@
                         step="1"
                         min="1"
                         name="matrixRows"
-                        ng-model="vm.matrix.rows"
+                        ng-model="vm.problem.matrix.rows"
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     />
                     <div
@@ -193,7 +193,7 @@
                         min="1"
                         name="matrixColumns"
                         id="matrix-columns"
-                        ng-model="vm.matrix.columns"
+                        ng-model="vm.problem.matrix.columns"
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     />
                     <div
@@ -212,7 +212,7 @@
                         rows="10"
                         required
                         name="matrixValues"
-                        ng-model="vm.matrix.values"
+                        ng-model="vm.problem.matrix.values"
                         ng-disabled="vm.matrixInputSource === 'FILE'"
                     ></textarea>
 
@@ -228,7 +228,7 @@
         </div>
     </div>
 
-    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem === 'SOLVE_LINEAR_SYSTEM'">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem.type === 'SOLVE_LINEAR_SYSTEM'">
         <md-subheader class="md-primary">Вектор правих частин</md-subheader>
 
         <md-divider></md-divider>
@@ -266,17 +266,17 @@
                 />
                 <label for="vector-input-file" class="md-button md-raised md-primary">
                     <md-icon>backup</md-icon>
-                    {{vm.vector.values ? 'Обрати інший файл' : 'Обрати файл'}}
+                    {{vm.problem.vector.values ? 'Обрати інший файл' : 'Обрати файл'}}
                 </label>
             </div>
 
-            <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.vector.values">
+            <div ng-if="vm.vectorInputSource === 'KEYBOARD' || vm.problem.vector.values">
 
                 <md-input-container class="md-block">
                     <label>Тип значень</label>
                     <md-select
                         name="vectorValuesType"
-                        ng-model="vm.vector.valuesType"
+                        ng-model="vm.problem.vector.valuesType"
                         required
                         ng-disabled="vm.vectorInputSource === 'FILE'"
                     >
@@ -304,7 +304,7 @@
                         step="1"
                         min="1"
                         name="vectorRows"
-                        ng-model="vm.vector.rows"
+                        ng-model="vm.problem.vector.rows"
                         ng-disabled="vm.vectorInputSource === 'FILE'"
                     />
                     <div
@@ -323,7 +323,7 @@
                         rows="10"
                         required
                         name="vectorValues"
-                        ng-model="vm.vector.values"
+                        ng-model="vm.problem.vector.values"
                         ng-disabled="vm.vectorInputSource === 'FILE'"
                     ></textarea>
 
@@ -339,7 +339,7 @@
         </div>
     </div>
 
-    <div md-whiteframe="3" class="md-margin" ng-if="vm.matrix.values && (vm.problem !== 'SOLVE_LINEAR_SYSTEM' || vm.vector.values)">
+    <div md-whiteframe="3" class="md-margin" ng-if="vm.problem.matrix.values && (vm.problem.type !== 'SOLVE_LINEAR_SYSTEM' || vm.problem.vector.values)">
         <md-subheader class="md-primary">Параметри обчислення</md-subheader>
 
         <md-divider></md-divider>
@@ -354,7 +354,7 @@
                     min="1"
                     max="{{vm.maxProcessesCount}}"
                     name="processesCount"
-                    ng-model="vm.processesCount"
+                    ng-model="vm.problem.processesCount"
                 />
                 <div
                     class="errors"
@@ -375,7 +375,7 @@
                     step="1"
                     min="1"
                     name="maxCalculationTime"
-                    ng-model="vm.maxCalculationTime"
+                    ng-model="vm.problem.maxCalculationTime"
                 />
                 <div
                     class="errors"
@@ -389,7 +389,7 @@
 
             <md-switch
                 class="md-primary"
-                ng-model="vm.showCalculationTime"
+                ng-model="vm.problem.showCalculationTime"
                 aria-label="Показати час обчислення?"
             >
                 Показати час обчислення?

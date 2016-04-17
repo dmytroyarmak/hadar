@@ -23,5 +23,17 @@
     HaProblemController.$inject = ['$log', '$state', 'haMatrixReader'];
     function HaProblemController($log, $state, haMatrixReader){
         var vm = this;
+        vm.getSelectedTabIndex = getSelectedTabIndex;
+
+        //////////
+
+        function getSelectedTabIndex() {
+            switch($state.$current.name) {
+                case 'problem.input': return 0;
+                case 'problem.progress': return 1;
+                case 'problem.result': return 2;
+                default: return NaN;
+            }
+        }
     }
 }());

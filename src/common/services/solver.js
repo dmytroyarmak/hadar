@@ -14,7 +14,7 @@
             getCurrentProblem: getCurrentProblem,
             hasCurrentProblem: hasCurrentProblem,
             cancelCurrentProblem: cancelCurrentProblem,
-            gaussJordanElimination: gaussJordanElimination
+            solveProblem: solveProblem
         };
 
         return service;
@@ -36,20 +36,26 @@
             console.log('Cancel current problem');
         }
 
-        function gaussJordanElimination(matrix, vector) {
-            var a = _convertMatrixToSharedArray(matrix);
-            var b = _convertMatrixToSharedArray(vector);
-            var n = matrix.rows;
-            var startTime = window.performance.now();
-            _currentProblem = _getPlalibInstance()
-                .gaussJordanEliminationPar(n, a, b)
-                .then(function() {
-                    var endTime = window.performance.now();
-                    return {
-                        solution: b.join('\n'),
-                        time: (endTime - startTime) / 1000
-                    };
-                });
+        function solveProblem(problem) {
+            if (problem.type === 'SOLVE_LINEAR_SYSTEM' && problem.method === 'GAUSS') {
+                var a = _convertMatrixToSharedArray(problem.matrix);
+                var b = _convertMatrixToSharedArray(problem.vector);
+                var n = problem.matrix.rows;
+                var startTime = window.performance.now();
+                _currentProblem = problem;
+                _currentProblem.resultPromise = _getPlalibInstance()
+                    .gaussJordanEliminationPar(n, a, b)
+                    .then(function() {
+                        var endTime = window.performance.now();
+                        return {
+                            solution: b.join('\n'),
+                            time: (endTime - startTime) / 1000
+                        };
+                    });
+            } else {
+                // TODO: Implement
+                throw new Error('Current problem type and method has not been implemented yet!');
+            }
         }
 
         function _getPlalibInstance () {

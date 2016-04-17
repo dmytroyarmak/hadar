@@ -35,7 +35,7 @@
             if (haSolver.hasCurrentProblem()) {
                 haSolver
                     .getCurrentProblem()
-                    .then(function onComputationDone (result) {
+                    .resultPromise.then(function onComputationDone (result) {
                         vm.result = result;
                     });
             } else {
