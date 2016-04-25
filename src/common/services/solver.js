@@ -42,15 +42,18 @@
         }
 
         function solveProblem(problem) {
-            if (problem.type === 'SOLVE_LINEAR_SYSTEM' && problem.method === 'GAUSS') {
+            var plalibMethodName = _getPlalibMethodName(problem);
+            if (plalibMethodName) {
+                console.log('Run plalibMethodName');
                 var a = _convertMatrixToSharedArray(problem.matrix);
                 var b = _convertMatrixToSharedArray(problem.vector);
                 var n = problem.matrix.rows;
                 var startTime = window.performance.now();
                 _currentProblem = problem;
                 _currentProblem.resultPromise = _getPlalibInstance()
-                    .gaussJordanEliminationPar(n, a, b, problem.processesCount)
+                    [plalibMethodName](n, a, b, problem.processesCount)
                     .then(function() {
+                        console.log('Done', a, b);
                         var endTime = window.performance.now();
                         return {
                             solution: b.join('\n'),
@@ -58,7 +61,6 @@
                         };
                     });
             } else {
-                // TODO: Implement
                 throw new Error('Current problem type and method has not been implemented yet!');
             }
         }
@@ -85,7 +87,7 @@
             var matrixArray = new Float64Array(matrixBuffer);
             matrix.values.trimRight().split('\n').map(function(row) {
                 return row.split(' ').map(function(value) {
-                    return parseInt(value, 10);
+                    return parseFloat(value);
                 });
             }).forEach(function(valueRow) {
                 var i = valueRow[0] - 1;
@@ -102,7 +104,7 @@
             var matrixBuffer = new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * numberOfValues);
             var matrixArray = new Float64Array(matrixBuffer);
             var regularArray = matrix.values.trimRight().split('\n').map(function(row) {
-                return parseInt(row, 10);
+                return parseFloat(row);
             });
             for (var i = 0; i < regularArray.length; i += 1) {
                 matrixArray[i] = regularArray[_byColumnToByRowIndex(i, matrix.columns)];
@@ -113,6 +115,15 @@
 
         function _byColumnToByRowIndex(i, n) {
             return (i % n) * n + Math.floor(i / n);
+        }
+
+        function _getPlalibMethodName(problem) {
+            if (problem.type === 'SOLVE_LINEAR_SYSTEM') {
+                switch (problem.method) {
+                    case 'GAUSS': return 'gaussJordanEliminationPar';
+                    case 'CHOLESKY': return 'solveLineraEquationByCholetskyPar';
+                }
+            }
         }
     }
 }());

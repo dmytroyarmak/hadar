@@ -55,10 +55,6 @@
             ];
             vm.availableMethods = [
                 {
-                    value: 'AUTO',
-                    label: 'Обрати автоматично'
-                },
-                {
                     value: 'GAUSS',
                     label: 'Метод Гауса'
                 },
@@ -109,8 +105,8 @@
                 label: 'Симетрична'
             }
         ];
-        vm.matrixInputSource = null;
-        vm.vectorInputSource = null;
+        vm.matrixInputSource = vm.availableInputSources[0].value;
+        vm.vectorInputSource = vm.availableInputSources[0].value;
         vm.maxProcessesCount = navigator.hardwareConcurrency;
         vm.problem = null;
         vm.onFileChange = onFileChange;
@@ -127,7 +123,7 @@
                 vm.problem = haSolver.getCurrentProblem();
             } else {
                 vm.problem = {
-                    type: null,
+                    type: vm.availableProblemTypes[0].value,
                     method: null,
                     matrix: _createEmptyMatrix(),
                     vector: _createEmptyMatrix(),
