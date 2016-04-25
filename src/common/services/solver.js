@@ -38,13 +38,11 @@
         function cancelCurrentProblem() {
             _currentProblem = null;
             // TODO: Implement problem canceling
-            console.log('Cancel current problem');
         }
 
         function solveProblem(problem) {
             var plalibMethodName = _getPlalibMethodName(problem);
             if (plalibMethodName) {
-                console.log('Run plalibMethodName');
                 var a = _convertMatrixToSharedArray(problem.matrix);
                 var b = _convertMatrixToSharedArray(problem.vector);
                 var n = problem.matrix.rows;
@@ -53,10 +51,9 @@
                 _currentProblem.resultPromise = _getPlalibInstance()
                     [plalibMethodName](n, a, b, problem.processesCount)
                     .then(function() {
-                        console.log('Done', a, b);
                         var endTime = window.performance.now();
                         return {
-                            solution: b.join('\n'),
+                            solution: _formatSolution(b),
                             time: (endTime - startTime) / 1000
                         };
                     });
@@ -124,6 +121,12 @@
                     case 'CHOLESKY': return 'solveLineraEquationByCholetskyPar';
                 }
             }
+        }
+
+        function _formatSolution(b) {
+            return b.map(function(x) {
+                return x.toFixed(9);
+            }).join('\n');
         }
     }
 }());

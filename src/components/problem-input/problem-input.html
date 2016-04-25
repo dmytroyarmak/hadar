@@ -207,14 +207,13 @@
                         </div>
                     </md-input-container>
 
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block" ng-if="vm.matrixInputSource === 'KEYBOARD'">
                         <label>Значення матриці</label>
                         <textarea
                             rows="10"
                             required
                             name="matrixValues"
                             ng-model="vm.problem.matrix.values"
-                            ng-disabled="vm.matrixInputSource === 'FILE'"
                         ></textarea>
 
                         <div
@@ -318,14 +317,13 @@
                         </div>
                     </md-input-container>
 
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block" ng-if="vm.matrixInputSource === 'KEYBOARD'">
                         <label>Значення вектора</label>
                         <textarea
                             rows="10"
                             required
                             name="vectorValues"
                             ng-model="vm.problem.vector.values"
-                            ng-disabled="vm.vectorInputSource === 'FILE'"
                         ></textarea>
 
                         <div
