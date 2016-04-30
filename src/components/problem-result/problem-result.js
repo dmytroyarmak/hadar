@@ -26,7 +26,8 @@
         var vm = this;
 
         vm.downloadResult = downloadResult;
-        vm.results = null;
+        vm.result = null;
+        vm.solveMultipleTimes = false;
         vm.timeChartData = null;
         vm.timeChartLabels = null;
 
@@ -40,9 +41,10 @@
                     haSolver
                         .getCurrentProblem()
                         .resultsPromise.then(function onComputationDone (results) {
-                            vm.results = results;
-                            vm.timeChartData = _getTimeChartData();
-                            vm.timeChartLabels = _getTimeChartLabels();
+                            vm.result = results[0];
+                            vm.solveMultipleTimes = (results.length > 1);
+                            vm.timeChartData = _getTimeChartData(results);
+                            vm.timeChartLabels = _getTimeChartLabels(results);
                         });
                 }, 50);
             } else {
@@ -57,16 +59,16 @@
             downloadLink.click();
         }
 
-        function _getTimeChartData() {
+        function _getTimeChartData(results) {
             return [
-                vm.results.map(function(result) {
+                results.map(function(result) {
                     return result.time;
                 })
             ];
         }
 
-        function _getTimeChartLabels() {
-            return vm.results.map(function(result) {
+        function _getTimeChartLabels(results) {
+            return results.map(function(result) {
                 return result.usedProcesses
             });
         }
