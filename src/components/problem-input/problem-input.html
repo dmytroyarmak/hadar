@@ -387,13 +387,26 @@
                 </div>
             </md-input-container>
 
-            <md-switch
-                class="md-primary"
-                ng-model="vm.problem.showCalculationTime"
-                aria-label="Показати час обчислення?"
-            >
-                Показати час обчислення?
-            </md-switch>
+            <div layout="row">
+                <div flex>
+                    <md-switch
+                        class="md-primary"
+                        ng-model="vm.problem.showCalculationTime"
+                        aria-label="Показати час обчислення?"
+                    >
+                        Показати час обчислення?
+                    </md-switch>
+                </div>
+                <div flex>
+                    <md-switch
+                        class="md-primary"
+                        ng-model="vm.problem.demoMode"
+                        aria-label="Демонстраційний режим"
+                    >
+                        Демонстраційний режим
+                    </md-switch>
+                </div>
+            </div>
         </div>
     </div>
 

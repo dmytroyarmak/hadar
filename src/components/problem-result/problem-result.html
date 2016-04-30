@@ -4,30 +4,44 @@
     <md-divider></md-divider>
 
     <div class="md-padding">
-        <md-input-container class="md-block">
-            <label>Час обчислення (c)</label>
-            <input
-                type="text"
-                name="calculationTime"
-                ng-model="vm.result.time"
-                readonly
-            />
-        </md-input-container>
+        <ha-bar-chart></ha-bar-chart>
 
-        <md-input-container class="md-block">
-            <label>Результат</label>
-            <textarea
-                rows="10"
-                ng-model="vm.result.solution"
-                readonly
-            ></textarea>
-        </md-input-container>
+        <div ng-repeat="result in vm.results">
+            <md-input-container class="md-block">
+                <label>Використано процесів</label>
+                <input
+                    type="text"
+                    name="usedProcesses"
+                    ng-model="result.usedProcesses"
+                    readonly
+                />
+            </md-input-container>
 
-        <div layout="row" layout-align="center">
-             <md-button type="button" class="md-raised md-accent" ng-click="vm.downloadResult()">
-                <md-icon>file_download</md-icon>
-                Завантажити результат
-            </md-button>
+            <md-input-container class="md-block">
+                <label>Час обчислення (c)</label>
+                <input
+                    type="text"
+                    name="calculationTime"
+                    ng-model="result.time"
+                    readonly
+                />
+            </md-input-container>
+
+            <md-input-container class="md-block">
+                <label>Результат</label>
+                <textarea
+                    rows="10"
+                    ng-model="result.solution"
+                    readonly
+                ></textarea>
+            </md-input-container>
+
+            <div layout="row" layout-align="center">
+                 <md-button type="button" class="md-raised md-accent" ng-click="vm.downloadResult(result)">
+                    <md-icon>file_download</md-icon>
+                    Завантажити результат
+                </md-button>
+            </div>
         </div>
     </div>
 </div>

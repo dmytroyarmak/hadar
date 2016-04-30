@@ -25,7 +25,7 @@
         var vm = this;
 
         vm.downloadResult = downloadResult;
-        vm.result = null;
+        vm.results = null;
 
         activate();
 
@@ -35,17 +35,17 @@
             if (haSolver.hasCurrentProblem()) {
                 haSolver
                     .getCurrentProblem()
-                    .resultPromise.then(function onComputationDone (result) {
-                        vm.result = result;
+                    .resultsPromise.then(function onComputationDone (results) {
+                        vm.results = results;
                     });
             } else {
                 $state.go('^.input');
             }
         }
 
-        function downloadResult () {
+        function downloadResult (result) {
             var downloadLink = document.createElement('a');
-            downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(vm.result));
+            downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result));
             downloadLink.setAttribute('download', 'result.txt');
             downloadLink.click();
         }

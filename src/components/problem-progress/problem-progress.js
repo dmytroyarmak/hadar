@@ -34,7 +34,7 @@
             if (haSolver.hasCurrentProblem()) {
                 haSolver
                     .getCurrentProblem()
-                    .resultPromise.then(function onComputationDone () {
+                    .resultsPromise.then(function onComputationDone () {
                         $state.go('^.result');
                     }, function onComputationFailed(error) {
                         $log.error('Problem computation failed', error);

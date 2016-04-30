@@ -41,22 +41,15 @@
         }
 
         function solveProblem(problem) {
-            var plalibMethodName = _getPlalibMethodName(problem);
-            if (plalibMethodName) {
-                var a = _convertMatrixToSharedArray(problem.matrix);
-                var b = _convertMatrixToSharedArray(problem.vector);
-                var n = problem.matrix.rows;
-                var startTime = window.performance.now();
+            if (_getPlalibMethodName(problem)) {
                 _currentProblem = problem;
-                _currentProblem.resultPromise = _getPlalibInstance()
-                    [plalibMethodName](n, a, b, problem.processesCount)
-                    .then(function() {
-                        var endTime = window.performance.now();
-                        return {
-                            solution: _formatSolution(b),
-                            time: (endTime - startTime) / 1000
-                        };
+                _currentProblem.resultsPromise = _getProcessesNumbersToUse(problem).reduce(function(resultsPromise, useProcesses) {
+                    return resultsPromise.then(function(results) {
+                        return _startSolving(problem, useProcesses).then(function(result) {
+                            return results.concat(result);
+                        });
                     });
+                }, $q.resolve([]));
             } else {
                 throw new Error('Current problem type and method has not been implemented yet!');
             }
@@ -127,6 +120,32 @@
             return b.map(function(x) {
                 return x.toFixed(9);
             }).join('\n');
+        }
+
+        function _startSolving(problem, useProcesses) {
+            var a = _convertMatrixToSharedArray(problem.matrix);
+            var b = _convertMatrixToSharedArray(problem.vector);
+            var n = problem.matrix.rows;
+            var startTime = window.performance.now();
+
+            return _getPlalibInstance()
+                [_getPlalibMethodName(problem)](n, a, b, useProcesses)
+                .then(function() {
+                    var endTime = window.performance.now();
+                    return {
+                        usedProcesses: useProcesses,
+                        solution: _formatSolution(b),
+                        time: (endTime - startTime) / 1000
+                    };
+                });
+        }
+
+        function _getProcessesNumbersToUse(problem) {
+            if (problem.demoMode) {
+                return _.range(1, problem.processesCount + 1);
+            } else {
+                return [problem.processesCount];
+            }
         }
     }
 }());

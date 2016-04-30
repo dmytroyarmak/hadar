@@ -107,7 +107,7 @@
         ];
         vm.matrixInputSource = vm.availableInputSources[0].value;
         vm.vectorInputSource = vm.availableInputSources[0].value;
-        vm.maxProcessesCount = navigator.hardwareConcurrency;
+        vm.maxProcessesCount = navigator.oscpu === 'Intel Mac OS X 10.11' ? navigator.hardwareConcurrency / 2 : navigator.hardwareConcurrency;
         vm.problem = null;
         vm.onFileChange = onFileChange;
         vm.onSelectFileInputType = onSelectFileInputType;
@@ -129,7 +129,8 @@
                     vector: _createEmptyMatrix(),
                     processesCount: vm.maxProcessesCount,
                     showCalculationTime: true,
-                    maxCalculationTime: DEFAULT_MAX_CALCULATION_TIME
+                    maxCalculationTime: DEFAULT_MAX_CALCULATION_TIME,
+                    demoMode: true
                 };
             }
         }
