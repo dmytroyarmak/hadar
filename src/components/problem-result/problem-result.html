@@ -4,7 +4,9 @@
     <md-divider></md-divider>
 
     <div class="md-padding">
-        <ha-bar-chart></ha-bar-chart>
+        <div ng-if="vm.results && vm.results.length > 1">
+            <canvas class="chart chart-bar" chart-data="vm.timeChartData" chart-labels="vm.timeChartLabels"></canvas>
+        </div>
 
         <div ng-repeat="result in vm.results">
             <md-input-container class="md-block">

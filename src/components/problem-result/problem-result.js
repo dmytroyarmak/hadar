@@ -4,6 +4,7 @@
     angular
         .module('hadar.components.problemResult', [
             'ui.router',
+            'chart.js',
             'hadar.common.services.solver'
         ])
         .config(problemResultConfig)
@@ -20,12 +21,14 @@
             });
     }
 
-    HaProblemResultController.$inject = ['$state', 'haSolver'];
-    function HaProblemResultController($state, haSolver){
+    HaProblemResultController.$inject = ['$timeout', '$state', 'haSolver'];
+    function HaProblemResultController($timeout, $state, haSolver){
         var vm = this;
 
         vm.downloadResult = downloadResult;
         vm.results = null;
+        vm.timeChartData = null;
+        vm.timeChartLabels = null;
 
         activate();
 
@@ -33,11 +36,15 @@
 
         function activate() {
             if (haSolver.hasCurrentProblem()) {
-                haSolver
-                    .getCurrentProblem()
-                    .resultsPromise.then(function onComputationDone (results) {
-                        vm.results = results;
-                    });
+                $timeout(function() {
+                    haSolver
+                        .getCurrentProblem()
+                        .resultsPromise.then(function onComputationDone (results) {
+                            vm.results = results;
+                            vm.timeChartData = _getTimeChartData();
+                            vm.timeChartLabels = _getTimeChartLabels();
+                        });
+                }, 50);
             } else {
                 $state.go('^.input');
             }
@@ -48,6 +55,20 @@
             downloadLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result));
             downloadLink.setAttribute('download', 'result.txt');
             downloadLink.click();
+        }
+
+        function _getTimeChartData() {
+            return [
+                vm.results.map(function(result) {
+                    return result.time;
+                })
+            ];
+        }
+
+        function _getTimeChartLabels() {
+            return vm.results.map(function(result) {
+                return result.usedProcesses
+            });
         }
     }
 }());
