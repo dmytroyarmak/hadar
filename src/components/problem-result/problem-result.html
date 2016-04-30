@@ -3,22 +3,23 @@
 
     <md-divider></md-divider>
 
-    <div class="md-padding">
-        <div ng-if="vm.result && vm.solveMultipleTimes">
-            <canvas class="chart chart-bar" chart-data="vm.timeChartData" chart-labels="vm.timeChartLabels"></canvas>
-        </div>
+    <div class="md-padding" ng-if="vm.result">
+        <md-input-container class="md-block">
+            <label>Час обчислення (c)</label>
 
-        <div ng-if="!vm.solveMultipleTimes">
-            <md-input-container class="md-block">
-                <label>Час обчислення (c)</label>
+            <div ng-if="vm.solveMultipleTimes">
+                <canvas class="chart chart-bar" chart-data="vm.timeChartData" chart-labels="vm.timeChartLabels"></canvas>
+            </div>
+
+            <div ng-if="!vm.solveMultipleTimes">
                 <input
                     type="text"
                     name="calculationTime"
                     ng-model="vm.result.time"
                     readonly
                 />
-            </md-input-container>
-        </div>
+            </div>
+        </md-input-container>
 
         <md-input-container class="md-block">
             <label>Результат</label>
