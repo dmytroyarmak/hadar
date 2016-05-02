@@ -7,7 +7,8 @@
             'ui.router',
             'hadar.common.services.matrixReader',
             'hadar.common.services.solver',
-            'hadar.common.directives.onFileChange'
+            'hadar.common.directives.onFileChange',
+            'hadar.common.constants.config'
         ])
         .config(problemInputConfig)
         .controller('HaProblemInputController', HaProblemInputController);
@@ -23,91 +24,20 @@
             });
     }
 
-    HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader', 'haSolver'];
-    function HaProblemInputController($log, $state, haMatrixReader, haSolver){
+    HaProblemInputController.$inject = ['$log', '$state', 'haMatrixReader', 'haSolver', 'haConfig'];
+    function HaProblemInputController($log, $state, haMatrixReader, haSolver, haConfig){
         var SWITCH_TO_EIGENVALUE = false;
         var DEFAULT_MAX_CALCULATION_TIME = 30;
 
         var vm = this;
 
-        vm.availableProblemTypes = [
-            {
-                value: 'SOLVE_LINEAR_SYSTEM',
-                label: 'Розв\'язання СЛАР'
-            },
-            {
-                value: 'SOLVE_EIGENVALUE_PROBLEM',
-                label: 'Розв\'язання АПВЗ'
-            }
-        ];
+        vm.availableProblemTypes = haConfig.AVAILABLE_PROBLEM_TYPES;
+        vm.availableMethods = haConfig.AVAILABLE_METHODS;
+        vm.availableInputSources = haConfig.AVAILABLE_INPUT_SOURCES;
+        vm.availableMatrixTypes = haConfig.AVAILABLE_MATRIX_TYPES;
+        vm.availableValuesTypes = haConfig.AVAILABLE_VALUES_TYPES;
+        vm.availableSymmetry = haConfig.AVAILABLE_SYMMETRY;
 
-        vm.availableMethods = {
-            SOLVE_LINEAR_SYSTEM: [
-                {
-                    value: 'GAUSS',
-                    label: 'Метод Гауса'
-                },
-                {
-                    value: 'CHOLESKY',
-                    label: 'Метод Холецького'
-                }
-            ],
-            SOLVE_EIGENVALUE_PROBLEM: [
-                {
-                    value: 'FULL_EIGENVALUE_3_DIAG_SIM',
-                    label: 'Повна стандартна АПВЗ з трьохдіагональною симетричною матрицею'
-                },
-                {
-                    value: 'FULL_EIGENVALUE_DENSE_SYM',
-                    label: 'Повна стандартна АПВЗ з щільною симетричною матрицею'
-                },
-                {
-                    value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
-                    label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
-                }
-            ]
-        };
-
-        vm.availableInputSources = [
-            {
-                value: 'FILE',
-                label: 'Файл'
-            },
-            {
-                value: 'KEYBOARD',
-                label: 'Клавіатура'
-            }
-        ];
-        vm.availableMatrixTypes = [
-            {
-                value: 'DENSE',
-                label: 'Щільна матриця'
-            },
-            {
-                value: 'SPARSE',
-                label: 'Розріджена матриця'
-            }
-        ];
-        vm.availableValuesTypes = [
-            {
-                value: 'REAL',
-                label: 'Дійсні'
-            },
-            {
-                value: 'INTEGER',
-                label: 'Цілі'
-            }
-        ];
-        vm.availableSymmetry = [
-            {
-                value: 'GENERAL',
-                label: 'Загального виду'
-            },
-            {
-                value: 'SYMMETRIC',
-                label: 'Симетрична'
-            }
-        ];
         vm.matrixInputSource = vm.availableInputSources[0].value;
         vm.vectorInputSource = vm.availableInputSources[0].value;
         vm.maxProcessesCount = navigator.oscpu === 'Intel Mac OS X 10.11' ? navigator.hardwareConcurrency / 2 : navigator.hardwareConcurrency;

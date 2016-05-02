@@ -4,6 +4,7 @@
     angular
         .module('hadar.common', [
             'hadar.common.services',
-            'hadar.common.directives'
+            'hadar.common.directives',
+            'hadar.common.constants'
         ]);
 }());
