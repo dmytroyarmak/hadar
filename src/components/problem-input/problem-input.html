@@ -10,6 +10,7 @@
                 <md-select
                     name="problemType"
                     ng-model="vm.problem.type"
+                    ng-change="vm.resetForm()"
                     required
                 >
                     <md-option
@@ -21,17 +22,16 @@
                 </md-select>
             </md-input-container>
 
-            <md-input-container class="md-block" ng-if="vm.availableMethods.length">
+            <md-input-container class="md-block" ng-if="vm.problem.type">
                 <label>Метод розв'язання</label>
                 <md-select
                     name="method"
                     ng-model="vm.problem.method"
                     required
-                    ng-disabled="!vm.problem.type"
                 >
                     <md-option
                         ng-value="method.value"
-                        ng-repeat="method in vm.availableMethods"
+                        ng-repeat="method in vm.availableMethods[vm.problem.type]"
                     >
                         {{method.label}}
                     </md-option>

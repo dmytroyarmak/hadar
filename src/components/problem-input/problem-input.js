@@ -30,8 +30,29 @@
 
         var vm = this;
 
-        if (SWITCH_TO_EIGENVALUE) {
-            vm.availableProblemTypes = [
+        vm.availableProblemTypes = [
+            {
+                value: 'SOLVE_LINEAR_SYSTEM',
+                label: 'Розв\'язання СЛАР'
+            },
+            {
+                value: 'SOLVE_EIGENVALUE_PROBLEM',
+                label: 'Розв\'язання АПВЗ'
+            }
+        ];
+
+        vm.availableMethods = {
+            SOLVE_LINEAR_SYSTEM: [
+                {
+                    value: 'GAUSS',
+                    label: 'Метод Гауса'
+                },
+                {
+                    value: 'CHOLESKY',
+                    label: 'Метод Холецького'
+                }
+            ],
+            SOLVE_EIGENVALUE_PROBLEM: [
                 {
                     value: 'FULL_EIGENVALUE_3_DIAG_SIM',
                     label: 'Повна стандартна АПВЗ з трьохдіагональною симетричною матрицею'
@@ -44,26 +65,8 @@
                     value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
                     label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
                 }
-            ];
-            vm.availableMethods = [];
-        } else {
-            vm.availableProblemTypes = [
-                {
-                    value: 'SOLVE_LINEAR_SYSTEM',
-                    label: 'Розв\'язання СЛАР'
-                }
-            ];
-            vm.availableMethods = [
-                {
-                    value: 'GAUSS',
-                    label: 'Метод Гауса'
-                },
-                {
-                    value: 'CHOLESKY',
-                    label: 'Метод Холецького'
-                }
-            ];
-        }
+            ]
+        };
 
         vm.availableInputSources = [
             {
@@ -113,6 +116,7 @@
         vm.onSelectFileInputType = onSelectFileInputType;
         vm.solveProblem = solveProblem;
         vm.isSubmitButtonDisabled = isSubmitButtonDisabled;
+        vm.resetForm = resetForm;
 
         activate();
 
@@ -122,16 +126,7 @@
             if (haSolver.hasCurrentProblem()) {
                 vm.problem = haSolver.getCurrentProblem();
             } else {
-                vm.problem = {
-                    type: vm.availableProblemTypes[0].value,
-                    method: null,
-                    matrix: _createEmptyMatrix(),
-                    vector: _createEmptyMatrix(),
-                    processesCount: vm.maxProcessesCount,
-                    showCalculationTime: true,
-                    maxCalculationTime: DEFAULT_MAX_CALCULATION_TIME,
-                    demoMode: true
-                };
+                vm.problem = _createEmptyProblem();
             }
         }
 
@@ -161,6 +156,27 @@
             if (vm.problemInputForm.$valid) {
                 haSolver.solveProblem(vm.problem);
                 $state.go('^.progress');
+            }
+        }
+
+        function resetForm() {
+            vm.problem = _createEmptyProblem(vm.problem.type);
+            vm.matrixInputSource = vm.availableInputSources[0].value;
+            vm.vectorInputSource = vm.availableInputSources[0].value;
+            vm.problemInputForm.$setPristine();
+            vm.problemInputForm.problemType.$setDirty();
+        }
+
+        function _createEmptyProblem(initialType) {
+            return {
+                type: initialType,
+                method: null,
+                matrix: _createEmptyMatrix(),
+                vector: _createEmptyMatrix(),
+                processesCount: vm.maxProcessesCount,
+                showCalculationTime: true,
+                maxCalculationTime: DEFAULT_MAX_CALCULATION_TIME,
+                demoMode: true
             }
         }
 
