@@ -113,6 +113,10 @@
                     case 'GAUSS': return 'gaussJordanEliminationPar';
                     case 'CHOLESKY': return 'solveLineraEquationByCholetskyPar';
                 }
+            } else if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM'){
+                switch (problem.method) {
+                    case 'FULL_EIGENVALUE_DENSE_SYM': return 'solveFullEigenvalueDenseSymPar';
+                }
             }
         }
 
@@ -124,7 +128,7 @@
 
         function _startSolving(problem, useProcesses) {
             var a = _convertMatrixToSharedArray(problem.matrix);
-            var b = _convertMatrixToSharedArray(problem.vector);
+            var b = (problem.type === 'SOLVE_LINEAR_SYSTEM') ? _convertMatrixToSharedArray(problem.vector) : _createEmptySharedArray();
             var n = problem.matrix.rows;
             var startTime = window.performance.now();
 
@@ -146,6 +150,11 @@
             } else {
                 return [problem.processesCount];
             }
+        }
+
+        function _createEmptySharedArray() {
+            var emptyBuffer = new SharedArrayBuffer(0);
+            return new Float64Array(emptyBuffer);
         }
     }
 }());
