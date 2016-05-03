@@ -181,6 +181,12 @@
         }
 
         function _getPlalibMethodArgs(problem) {
+            // HACK: Generate input for power method instead of reading from file
+            if (problem.method === 'POWER_METHOD') {
+                var n = 10000;
+                return [n, _generatePowerMethodInput(n), _createSharedArray(n).fill(1), _createSharedArray(n)]
+            }
+
             var n = problem.matrix.rows;
             var a = _convertMatrixToSharedArray(problem.matrix);
 
@@ -192,6 +198,19 @@
                     case 'POWER_METHOD': return [n, a, _createSharedArray(n).fill(1), _createSharedArray(n)];
                 }
             }
+        }
+
+        var powerMethodInput;
+        function _generatePowerMethodInput(n) {
+            if (!powerMethodInput) {
+                powerMethodInput = _createSharedArray(n * n);
+                for (var j = 0; j < n; j++) {
+                    for (var i = 0; i < n; i++) {
+                        powerMethodInput[i * n + j] = (n - Math.max(i, j));
+                    }
+                }
+            }
+            return powerMethodInput;
         }
 
         function formatSolution(problem, plalibMethodArgs) {
