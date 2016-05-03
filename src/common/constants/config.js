@@ -42,6 +42,10 @@
                 {
                     value: 'PARTIAL_EIGENVALUE_SYM_POS_DEF',
                     label: 'Часткова стандартна АПВЗ з симетричною додатньовизначеною матрицею'
+                },
+                {
+                    value: 'POWER_METHOD',
+                    label: 'Степеневий метод'
                 }
             ]
         };

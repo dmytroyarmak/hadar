@@ -116,32 +116,93 @@
             } else if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM'){
                 switch (problem.method) {
                     case 'FULL_EIGENVALUE_DENSE_SYM': return 'solveFullEigenvalueDenseSymPar';
+                    case 'POWER_METHOD': return 'powerMethodPar';
                 }
             }
         }
 
-        function _formatSolution(b) {
-            return b.map(function(x) {
-                return x.toFixed(9);
-            }).join('\n');
+        function _formatArrayOfNumbers(b) {
+            return b.map(_formatNumber).join('\n');
+        }
+
+        function _formatNumber(x) {
+            return x.toFixed(9);
+        }
+
+        function _startSolvingOld(problem, useProcesses) {
+            var a = _convertMatrixToSharedArray(problem.matrix);
+            var b = (problem.type === 'SOLVE_LINEAR_SYSTEM') ? _convertMatrixToSharedArray(problem.vector) : _createSharedArray(0);
+            var n = problem.matrix.rows;
+
+            // HACK: Dirty solution to test 'power method';
+            if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM' && problem.method === 'POWER_METHOD') {
+                var x = new Float64Array(new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * problem.matrix.rows)).fill(1);
+                var xTmp = new Float64Array(new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * problem.matrix.rows));
+                var startTime = window.performance.now();
+                return _getPlalibInstance()
+                    [_getPlalibMethodName(problem)](n, a, x, xTmp, useProcesses)
+                    .then(function() {
+                        var endTime = window.performance.now();
+                        return {
+                            usedProcesses: useProcesses,
+                            solution: xTmp[0].toFixed(9),
+                            time: (endTime - startTime) / 1000
+                        };
+                    });
+            } else {
+                var startTime = window.performance.now();
+                return _getPlalibInstance()
+                    [_getPlalibMethodName(problem)](n, a, b, useProcesses)
+                    .then(function() {
+                        var endTime = window.performance.now();
+                        return {
+                            usedProcesses: useProcesses,
+                            solution: _formatArrayOfNumbers(b),
+                            time: (endTime - startTime) / 1000
+                        };
+                    });
+            }
         }
 
         function _startSolving(problem, useProcesses) {
-            var a = _convertMatrixToSharedArray(problem.matrix);
-            var b = (problem.type === 'SOLVE_LINEAR_SYSTEM') ? _convertMatrixToSharedArray(problem.vector) : _createEmptySharedArray();
-            var n = problem.matrix.rows;
-            var startTime = window.performance.now();
+            var plalibMethodArgs = _getPlalibMethodArgs(problem);
 
+            var startTime = window.performance.now();
             return _getPlalibInstance()
-                [_getPlalibMethodName(problem)](n, a, b, useProcesses)
+                [_getPlalibMethodName(problem)].apply(_getPlalibInstance(), plalibMethodArgs.concat(useProcesses))
                 .then(function() {
                     var endTime = window.performance.now();
                     return {
                         usedProcesses: useProcesses,
-                        solution: _formatSolution(b),
+                        solution: formatSolution(problem, plalibMethodArgs),
                         time: (endTime - startTime) / 1000
                     };
                 });
+        }
+
+        function _getPlalibMethodArgs(problem) {
+            var n = problem.matrix.rows;
+            var a = _convertMatrixToSharedArray(problem.matrix);
+
+            if (problem.type === 'SOLVE_LINEAR_SYSTEM') {
+                return [n, a, _convertMatrixToSharedArray(problem.vector)];
+            } else if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM'){
+                switch (problem.method) {
+                    case 'FULL_EIGENVALUE_DENSE_SYM': return [n, a, _createSharedArray(0)];
+                    case 'POWER_METHOD': return [n, a, _createSharedArray(n).fill(1), _createSharedArray(n)];
+                }
+            }
+        }
+
+        function formatSolution(problem, plalibMethodArgs) {
+            if (problem.type === 'SOLVE_LINEAR_SYSTEM') {
+                return _formatArrayOfNumbers(plalibMethodArgs[2]);
+            } else if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM'){
+                switch (problem.method) {
+                    case 'FULL_EIGENVALUE_DENSE_SYM': return '';
+                    case 'POWER_METHOD': return _formatNumber(plalibMethodArgs[3][0]);
+                }
+            }
         }
 
         function _getProcessesNumbersToUse(problem) {
@@ -152,9 +213,9 @@
             }
         }
 
-        function _createEmptySharedArray() {
-            var emptyBuffer = new SharedArrayBuffer(0);
-            return new Float64Array(emptyBuffer);
+        function _createSharedArray(size) {
+            var buffer = new SharedArrayBuffer(Float64Array.BYTES_PER_ELEMENT * size);
+            return new Float64Array(buffer);
         }
     }
 }());
