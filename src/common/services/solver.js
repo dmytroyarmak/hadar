@@ -194,7 +194,7 @@
                 return [n, a, _convertMatrixToSharedArray(problem.vector)];
             } else if (problem.type === 'SOLVE_EIGENVALUE_PROBLEM'){
                 switch (problem.method) {
-                    case 'FULL_EIGENVALUE_DENSE_SYM': return [n, a, _createSharedArray(0)];
+                    case 'FULL_EIGENVALUE_DENSE_SYM': return [n, a];
                     case 'POWER_METHOD': return [n, a, _createSharedArray(n).fill(1), _createSharedArray(n)];
                 }
             }
